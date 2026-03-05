@@ -1,0 +1,161 @@
+-- Oracle SQL Schema for Bookstore Project
+-- This script creates the database schema for the PHP Bookstore application
+-- Run this in Oracle SQL Developer or command line sqlplus
+
+-- Drop existing tables if they exist (uncomment if needed for recreation)
+-- DROP TABLE ORDER_ITEMS CASCADE CONSTRAINTS;
+-- DROP TABLE ORDERS CASCADE CONSTRAINTS;
+-- DROP TABLE BOOKS CASCADE CONSTRAINTS;
+-- DROP TABLE AUTHORS CASCADE CONSTRAINTS;
+-- DROP TABLE CUSTOMERS CASCADE CONSTRAINTS;
+
+-- Drop sequences if they exist
+-- DROP SEQUENCE authors_seq;
+-- DROP SEQUENCE books_seq;
+-- DROP SEQUENCE customers_seq;
+-- DROP SEQUENCE orders_seq;
+-- DROP SEQUENCE order_items_seq;
+
+-- Create sequences for auto-increment functionality
+CREATE SEQUENCE authors_seq START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE books_seq START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE customers_seq START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE orders_seq START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE order_items_seq START WITH 1 INCREMENT BY 1;
+
+-- Create AUTHORS table
+CREATE TABLE AUTHORS (
+    AUTHOR_ID NUMBER(10) PRIMARY KEY,
+    NAME VARCHAR2(100) NOT NULL,
+    BIOGRAPHY CLOB
+);
+
+-- Trigger for AUTHORS auto-increment
+CREATE OR REPLACE TRIGGER authors_trigger
+BEFORE INSERT ON AUTHORS
+FOR EACH ROW
+BEGIN
+    SELECT authors_seq.NEXTVAL INTO :NEW.AUTHOR_ID FROM DUAL;
+END;
+/
+
+-- Create BOOKS table
+CREATE TABLE BOOKS (
+    BOOK_ID NUMBER(10) PRIMARY KEY,
+    TITLE VARCHAR2(255) NOT NULL,
+    AUTHOR_ID NUMBER(10) NOT NULL,
+    ISBN VARCHAR2(13), -- ISBN can be 10 or 13 digits
+    GENRE VARCHAR2(50),
+    PUBLISHED_YEAR NUMBER(4),
+    PRICE NUMBER(10,2) NOT NULL,
+    STOCK NUMBER(10),
+    EDITION VARCHAR2(50),
+    COVER_URL VARCHAR2(500),
+    DESCRIPTION CLOB,
+    CONSTRAINT fk_books_author FOREIGN KEY (AUTHOR_ID) REFERENCES AUTHORS(AUTHOR_ID)
+);
+
+-- Trigger for BOOKS auto-increment
+CREATE OR REPLACE TRIGGER books_trigger
+BEFORE INSERT ON BOOKS
+FOR EACH ROW
+BEGIN
+    SELECT books_seq.NEXTVAL INTO :NEW.BOOK_ID FROM DUAL;
+END;
+/
+
+-- Create CUSTOMERS table
+CREATE TABLE CUSTOMERS (
+    CUSTOMER_ID NUMBER(10) PRIMARY KEY,
+    NAME VARCHAR2(100) NOT NULL,
+    EMAIL VARCHAR2(100) NOT NULL UNIQUE,
+    PHONE VARCHAR2(20),
+    ADDRESS CLOB
+);
+
+-- Trigger for CUSTOMERS auto-increment
+CREATE OR REPLACE TRIGGER customers_trigger
+BEFORE INSERT ON CUSTOMERS
+FOR EACH ROW
+BEGIN
+    SELECT customers_seq.NEXTVAL INTO :NEW.CUSTOMER_ID FROM DUAL;
+END;
+/
+
+-- Create ORDERS table
+CREATE TABLE ORDERS (
+    ORDER_ID NUMBER(10) PRIMARY KEY,
+    CUSTOMER_ID NUMBER(10) NOT NULL,
+    ORDER_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    TOTAL_AMOUNT NUMBER(10,2) NOT NULL,
+    STATUS VARCHAR2(20) DEFAULT 'Pending' CHECK (STATUS IN ('Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled')),
+    CONSTRAINT fk_orders_customer FOREIGN KEY (CUSTOMER_ID) REFERENCES CUSTOMERS(CUSTOMER_ID)
+);
+
+-- Trigger for ORDERS auto-increment
+CREATE OR REPLACE TRIGGER orders_trigger
+BEFORE INSERT ON ORDERS
+FOR EACH ROW
+BEGIN
+    SELECT orders_seq.NEXTVAL INTO :NEW.ORDER_ID FROM DUAL;
+END;
+/
+
+-- Create ORDER_ITEMS table
+CREATE TABLE ORDER_ITEMS (
+    ORDER_ITEM_ID NUMBER(10) PRIMARY KEY,
+    ORDER_ID NUMBER(10) NOT NULL,
+    BOOK_ID NUMBER(10) NOT NULL,
+    QUANTITY NUMBER(10) NOT NULL,
+    PRICE NUMBER(10,2) NOT NULL,
+    CONSTRAINT fk_order_items_order FOREIGN KEY (ORDER_ID) REFERENCES ORDERS(ORDER_ID),
+    CONSTRAINT fk_order_items_book FOREIGN KEY (BOOK_ID) REFERENCES BOOKS(BOOK_ID)
+);
+
+-- Trigger for ORDER_ITEMS auto-increment
+CREATE OR REPLACE TRIGGER order_items_trigger
+BEFORE INSERT ON ORDER_ITEMS
+FOR EACH ROW
+BEGIN
+    SELECT order_items_seq.NEXTVAL INTO :NEW.ORDER_ITEM_ID FROM DUAL;
+END;
+/
+
+-- Optional: Create indexes for better performance
+CREATE INDEX idx_books_author ON BOOKS(AUTHOR_ID);
+CREATE INDEX idx_books_title ON BOOKS(TITLE);
+CREATE INDEX idx_orders_customer ON ORDERS(CUSTOMER_ID);
+CREATE INDEX idx_orders_date ON ORDERS(ORDER_DATE);
+CREATE INDEX idx_order_items_order ON ORDER_ITEMS(ORDER_ID);
+CREATE INDEX idx_order_items_book ON ORDER_ITEMS(BOOK_ID);
+CREATE INDEX idx_customers_email ON CUSTOMERS(EMAIL);
+
+-- Optional: Sample data insertion (uncomment to insert sample data)
+/*
+-- Insert sample authors
+INSERT INTO AUTHORS (NAME, BIOGRAPHY) VALUES ('J.K. Rowling', 'British author best known for the Harry Potter series.');
+INSERT INTO AUTHORS (NAME, BIOGRAPHY) VALUES ('George Orwell', 'English novelist and essayist.');
+
+-- Insert sample books
+INSERT INTO BOOKS (TITLE, AUTHOR_ID, ISBN, GENRE, PUBLISHED_YEAR, PRICE, STOCK, EDITION) 
+VALUES ('Harry Potter and the Philosopher''s Stone', 1, '0747532699', 'Fantasy', 1997, 19.99, 100, '1st Edition');
+
+INSERT INTO BOOKS (TITLE, AUTHOR_ID, ISBN, GENRE, PUBLISHED_YEAR, PRICE, STOCK, EDITION) 
+VALUES ('1984', 2, '0451524934', 'Dystopian', 1949, 14.99, 50, '1st Edition');
+
+-- Insert sample customers
+INSERT INTO CUSTOMERS (NAME, EMAIL, PHONE, ADDRESS) 
+VALUES ('John Doe', 'john.doe@example.com', '+1234567890', '123 Main St, Anytown, USA');
+
+-- Insert sample order
+INSERT INTO ORDERS (CUSTOMER_ID, TOTAL_AMOUNT, STATUS) 
+VALUES (1, 34.98, 'Pending');
+
+-- Insert sample order items
+INSERT INTO ORDER_ITEMS (ORDER_ID, BOOK_ID, QUANTITY, PRICE) 
+VALUES (1, 1, 1, 19.99);
+INSERT INTO ORDER_ITEMS (ORDER_ID, BOOK_ID, QUANTITY, PRICE) 
+VALUES (1, 2, 1, 14.99);
+*/
+
+COMMIT;

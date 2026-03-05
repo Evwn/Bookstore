@@ -4,14 +4,14 @@ require_once __DIR__ . '/../db.php';
 // Fetch all books
 function getAllBooks() {
     global $pdo;
-    $stmt = $pdo->query('SELECT b.*, a.name as author_name FROM books b LEFT JOIN authors a ON b.author_id = a.author_id ORDER BY b.title');
+    $stmt = $pdo->query('SELECT B.*, A.NAME AS AUTHOR_NAME FROM BOOKS B LEFT JOIN AUTHORS A ON B.AUTHOR_ID = A.AUTHOR_ID ORDER BY B.TITLE');
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
 // Fetch single book by ID
 function getBookById($id) {
     global $pdo;
-    $stmt = $pdo->prepare('SELECT b.*, a.name as author_name FROM books b LEFT JOIN authors a ON b.author_id = a.author_id WHERE b.book_id = ?');
+    $stmt = $pdo->prepare('SELECT B.*, A.NAME AS AUTHOR_NAME FROM BOOKS B LEFT JOIN AUTHORS A ON B.AUTHOR_ID = A.AUTHOR_ID WHERE B.BOOK_ID = ?');
     $stmt->execute([$id]);
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
@@ -19,20 +19,20 @@ function getBookById($id) {
 // Add new book
 function addBook($title, $author_id, $genre, $published_year, $price, $stock, $edition = null, $cover_url = null, $description = null) {
     global $pdo;
-    $stmt = $pdo->prepare('INSERT INTO books (title, author_id, genre, published_year, price, stock, edition, cover_url, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
+    $stmt = $pdo->prepare('INSERT INTO BOOKS (TITLE, AUTHOR_ID, GENRE, PUBLISHED_YEAR, PRICE, STOCK, EDITION, COVER_URL, DESCRIPTION) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
     return $stmt->execute([$title, $author_id, $genre, $published_year, $price, $stock, $edition, $cover_url, $description]);
 }
 
 // Update book
 function updateBook($id, $title, $author_id, $genre, $published_year, $price, $stock, $edition = null, $cover_url = null, $description = null) {
     global $pdo;
-    $stmt = $pdo->prepare('UPDATE books SET title = ?, author_id = ?, genre = ?, published_year = ?, price = ?, stock = ?, edition = ?, cover_url = ?, description = ? WHERE book_id = ?');
+    $stmt = $pdo->prepare('UPDATE BOOKS SET TITLE = ?, AUTHOR_ID = ?, GENRE = ?, PUBLISHED_YEAR = ?, PRICE = ?, STOCK = ?, EDITION = ?, COVER_URL = ?, DESCRIPTION = ? WHERE BOOK_ID = ?');
     return $stmt->execute([$title, $author_id, $genre, $published_year, $price, $stock, $edition, $cover_url, $description, $id]);
 }
 
 // Delete book
 function deleteBook($id) {
     global $pdo;
-    $stmt = $pdo->prepare('DELETE FROM books WHERE book_id = ?');
+    $stmt = $pdo->prepare('DELETE FROM BOOKS WHERE BOOK_ID = ?');
     return $stmt->execute([$id]);
 }
