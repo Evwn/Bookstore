@@ -17,17 +17,17 @@ function getBookById($id) {
 }
 
 // Add new book
-function addBook($title, $author_id, $genre, $published_year, $price, $stock, $edition = null, $cover_url = null, $description = null) {
+function addBook($title, $author_id, $isbn, $genre, $published_year, $price, $stock, $edition = null, $cover_url = null, $description = null) {
     global $pdo;
-    $stmt = $pdo->prepare('INSERT INTO BOOKS (TITLE, AUTHOR_ID, GENRE, PUBLISHED_YEAR, PRICE, STOCK, EDITION, COVER_URL, DESCRIPTION) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
-    return $stmt->execute([$title, $author_id, $genre, $published_year, $price, $stock, $edition, $cover_url, $description]);
+    $stmt = $pdo->prepare('INSERT INTO BOOKS (TITLE, AUTHOR_ID, ISBN, GENRE, PUBLISHED_YEAR, PRICE, STOCK, EDITION, COVER_URL, DESCRIPTION) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+    return $stmt->execute([$title, $author_id, $isbn, $genre, $published_year, $price, $stock, $edition, $cover_url, $description]);
 }
 
 // Update book
-function updateBook($id, $title, $author_id, $genre, $published_year, $price, $stock, $edition = null, $cover_url = null, $description = null) {
+function updateBook($id, $title, $author_id, $isbn, $genre, $published_year, $price, $stock, $edition = null, $cover_url = null, $description = null) {
     global $pdo;
-    $stmt = $pdo->prepare('UPDATE BOOKS SET TITLE = ?, AUTHOR_ID = ?, GENRE = ?, PUBLISHED_YEAR = ?, PRICE = ?, STOCK = ?, EDITION = ?, COVER_URL = ?, DESCRIPTION = ? WHERE BOOK_ID = ?');
-    return $stmt->execute([$title, $author_id, $genre, $published_year, $price, $stock, $edition, $cover_url, $description, $id]);
+    $stmt = $pdo->prepare('UPDATE BOOKS SET TITLE = ?, AUTHOR_ID = ?, ISBN = ?, GENRE = ?, PUBLISHED_YEAR = ?, PRICE = ?, STOCK = ?, EDITION = ?, COVER_URL = ?, DESCRIPTION = ? WHERE BOOK_ID = ?');
+    return $stmt->execute([$title, $author_id, $isbn, $genre, $published_year, $price, $stock, $edition, $cover_url, $description, $id]);
 }
 
 // Delete book

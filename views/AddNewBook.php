@@ -10,6 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $title = trim($_POST['title'] ?? '');
     $author_id = intval($_POST['author_id'] ?? 0);
+    $isbn = trim($_POST['isbn'] ?? '');
     $genre = trim($_POST['genre'] ?? '');
     $published_year = $_POST['published_year'] ?? null;
     $price = floatval($_POST['price'] ?? 0);
@@ -25,6 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (addBook(
             $title,
             $author_id,
+            $isbn,
             $genre,
             $published_year,
             $price,
@@ -168,181 +170,98 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 </label>
 <div class="mt-1">
 <input class="shadow-sm focus:ring-primary focus:border-primary block w-full sm:text-sm border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-md h-10 px-3" id="title" name="title" placeholder="e.g. The Great Gatsby" type="text" value="<?= htmlspecialchars($_POST['title'] ?? '') ?>"/>
-<input type="text" name="genre" placeholder="Genre"
-value="<?= htmlspecialchars($_POST['genre'] ?? '') ?>">
-
-<input type="text" name="published_year" placeholder="Published Year"
-value="<?= htmlspecialchars($_POST['published_year'] ?? '') ?>">
-
-<input type="text" name="price" placeholder="Price"
-value="<?= htmlspecialchars($_POST['price'] ?? '') ?>">
-
-<input type="text" name="stock" placeholder="Stock"
-value="<?= htmlspecialchars($_POST['stock'] ?? '') ?>">
-
-<input type="text" name="edition" placeholder="Edition"
-value="<?= htmlspecialchars($_POST['edition'] ?? '') ?>">
-
-<input type="text" name="cover_url" placeholder="Image URL"
-value="<?= htmlspecialchars($_POST['cover_url'] ?? '') ?>">
-
-<textarea name="description"><?= htmlspecialchars($_POST['description'] ?? '') ?></textarea>
-
-
 </div>
 </div>
-</div>
-</div>
-<!-- Section 2: Pricing & Stats -->
-<div class="p-6 sm:p-8 space-y-6 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
-<h3 class="text-lg leading-6 font-medium text-slate-900 dark:text-white flex items-center gap-2">
-<span class="material-icons text-primary text-xl">attach_money</span>
-                            Pricing &amp; Fees
-                        </h3>
-<div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-<!-- Price Field -->
+<!-- Author Field -->
 <div class="sm:col-span-3">
-<label class="block text-sm font-medium text-slate-700 dark:text-slate-300" for="price">
-                                    Price
+<label class="block text-sm font-medium text-slate-700 dark:text-slate-300" for="author_id">
+                                    Author
                                 </label>
-<div class="mt-1 relative rounded-md shadow-sm">
-<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-<span class="text-slate-500 sm:text-sm">$</span>
-</div>
-<input class="focus:ring-primary focus:border-primary block w-full pl-7 pr-12 sm:text-sm border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-md h-10" id="price" name="price" placeholder="0.00" type="number"/>
-<div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-<span class="text-slate-500 sm:text-sm">USD</span>
-</div>
-</div>
-</div>
-<!-- Percentage Field -->
-<div class="sm:col-span-3">
-<label class="block text-sm font-medium text-slate-700 dark:text-slate-300" for="percentage">
-                                    Percentage
-                                </label>
-<div class="mt-1 relative rounded-md shadow-sm">
-<input class="focus:ring-primary focus:border-primary block w-full pr-10 sm:text-sm border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-md h-10 px-3" id="percentage" name="percentage" placeholder="0" type="number"/>
-<div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-<span class="text-slate-500 sm:text-sm">%</span>
-</div>
-</div>
-<p class="mt-2 text-xs text-slate-500 dark:text-slate-400">Royalty or Discount share.</p>
-</div>
-</div>
-</div>
-<!-- Section 3: Authors -->
-<div class="p-6 sm:p-8 space-y-6">
-<div class="flex items-center justify-between">
-<h3 class="text-lg leading-6 font-medium text-slate-900 dark:text-white flex items-center gap-2">
-<span class="material-icons text-primary text-xl">group</span>
-                                Authors
-                            </h3>
-<a class="text-xs font-medium text-primary hover:text-primary-hover flex items-center" href="#">
-<span class="material-icons text-sm mr-1">add</span>
-                                Add New Author
-                            </a>
-</div>
-<div class="sm:col-span-6">
-<label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">
-                                Select Author(s)
-                            </label>
-<!-- Custom Multi-select UI -->
-<div class="border border-slate-300 dark:border-slate-700 rounded-lg p-4 bg-slate-50 dark:bg-slate-800/30">
-<!-- Search bar for the list -->
-<div class="relative mb-4">
-<span class="absolute inset-y-0 left-0 flex items-center pl-3">
-<span class="material-icons text-slate-400 text-lg">search</span>
-</span>
-<input class="w-full py-2 pl-10 pr-4 text-sm text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Search existing authors..." type="text"/>
-</div>
-<!-- Scrollable Checkbox List -->
-<div class="max-h-48 overflow-y-auto space-y-2 pr-2 custom-scrollbar">
-<!-- Option 1 -->
-<label class="flex items-center p-2 rounded-md hover:bg-white dark:hover:bg-slate-800 transition-colors cursor-pointer group">
-<input class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded" name="authors[]" type="checkbox" value="1"/>
-<div class="ml-3 flex items-center">
-<div class="flex-shrink-0 h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold text-xs">
-                                                JD
-                                            </div>
-<div class="ml-3">
-<p class="text-sm font-medium text-slate-900 dark:text-slate-200 group-hover:text-primary">J.D. Salinger</p>
-<p class="text-xs text-slate-500">New York, USA</p>
-</div>
-</div>
-</label>
-<!-- Option 2 (Selected) -->
-<label class="flex items-center p-2 rounded-md bg-white dark:bg-slate-800 border border-primary/20 cursor-pointer group">
-<input checked="" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded" name="authors[]" type="checkbox" value="2"/>
-<div class="ml-3 flex items-center">
-<div class="flex-shrink-0 h-8 w-8 rounded-full bg-green-100 flex items-center justify-center text-green-600 font-bold text-xs">
-                                                JK
-                                            </div>
-<div class="ml-3">
-<p class="text-sm font-medium text-slate-900 dark:text-slate-200 group-hover:text-primary">J.K. Rowling</p>
-<p class="text-xs text-slate-500">Yate, UK</p>
-</div>
-</div>
-<span class="ml-auto text-xs font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-full">Selected</span>
-</label>
-<!-- Option 3 -->
-<label class="flex items-center p-2 rounded-md hover:bg-white dark:hover:bg-slate-800 transition-colors cursor-pointer group">
-<input class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded" name="authors[]" type="checkbox" value="3"/>
-<div class="ml-3 flex items-center">
-<div class="flex-shrink-0 h-8 w-8 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 font-bold text-xs">
-                                                SK
-                                            </div>
-<div class="ml-3">
-<p class="text-sm font-medium text-slate-900 dark:text-slate-200 group-hover:text-primary">Stephen King</p>
-<p class="text-xs text-slate-500">Maine, USA</p>
-</div>
-</div>
-</label>
-<!-- Option 4 -->
-<label class="flex items-center p-2 rounded-md hover:bg-white dark:hover:bg-slate-800 transition-colors cursor-pointer group">
-<!-- Author Dropdown -->
-<select name="author_id" class="block w-full rounded-md border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-white h-10 px-3" required>
-    <option value="">Select Author</option>
-    <?php foreach ($authors as $author): ?>
-        <option value="<?= $author['author_id'] ?>" <?= (isset($_POST['author_id']) && $_POST['author_id'] == $author['author_id']) ? 'selected' : '' ?>><?= htmlspecialchars($author['name']) ?></option>
-    <?php endforeach; ?>
+<div class="mt-1">
+<select class="shadow-sm focus:ring-primary focus:border-primary block w-full sm:text-sm border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-md h-10 px-3" id="author_id" name="author_id">
+<option value="">Select an author</option>
+<?php foreach ($authors as $author): ?>
+<option value="<?= $author['AUTHOR_ID'] ?>" <?= ($_POST['author_id'] ?? '') == $author['AUTHOR_ID'] ? 'selected' : '' ?>><?= htmlspecialchars($author['NAME']) ?></option>
+<?php endforeach; ?>
 </select>
-<div class="ml-3 flex items-center">
-<div class="flex-shrink-0 h-8 w-8 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 font-bold text-xs">
-                                                GA
-                                            </div>
-<div class="ml-3">
-<p class="text-sm font-medium text-slate-900 dark:text-slate-200 group-hover:text-primary">George R.R. Martin</p>
-<p class="text-xs text-slate-500">New Jersey, USA</p>
 </div>
 </div>
-</label>
+<!-- Genre Field -->
+<div class="sm:col-span-3">
+<label class="block text-sm font-medium text-slate-700 dark:text-slate-300" for="genre">
+                                    Genre
+                                </label>
+<div class="mt-1">
+<input class="shadow-sm focus:ring-primary focus:border-primary block w-full sm:text-sm border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-md h-10 px-3" id="genre" name="genre" placeholder="e.g. Fiction" type="text" value="<?= htmlspecialchars($_POST['genre'] ?? '') ?>"/>
 </div>
-<p class="mt-2 text-xs text-slate-500 dark:text-slate-400 flex items-center">
-<span class="material-icons text-xs mr-1 text-slate-400">info</span>
-                                    Scroll to see more authors
-                                </p>
+</div>
+<!-- Published Year Field -->
+<div class="sm:col-span-2">
+<label class="block text-sm font-medium text-slate-700 dark:text-slate-300" for="published_year">
+                                    Published Year
+                                </label>
+<div class="mt-1">
+<input class="shadow-sm focus:ring-primary focus:border-primary block w-full sm:text-sm border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-md h-10 px-3" id="published_year" name="published_year" placeholder="e.g. 2023" type="number" value="<?= htmlspecialchars($_POST['published_year'] ?? '') ?>"/>
+</div>
+</div>
+<!-- Price Field -->
+<div class="sm:col-span-2">
+<label class="block text-sm font-medium text-slate-700 dark:text-slate-300" for="price">
+                                    Price ($)
+                                </label>
+<div class="mt-1">
+<input class="shadow-sm focus:ring-primary focus:border-primary block w-full sm:text-sm border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-md h-10 px-3" id="price" name="price" placeholder="0.00" step="0.01" type="number" value="<?= htmlspecialchars($_POST['price'] ?? '') ?>"/>
+</div>
+</div>
+<!-- Stock Field -->
+<div class="sm:col-span-2">
+<label class="block text-sm font-medium text-slate-700 dark:text-slate-300" for="stock">
+                                    Stock
+                                </label>
+<div class="mt-1">
+<input class="shadow-sm focus:ring-primary focus:border-primary block w-full sm:text-sm border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-md h-10 px-3" id="stock" name="stock" placeholder="0" type="number" value="<?= htmlspecialchars($_POST['stock'] ?? '') ?>"/>
+</div>
+</div>
+<!-- Edition Field -->
+<div class="sm:col-span-3">
+<label class="block text-sm font-medium text-slate-700 dark:text-slate-300" for="edition">
+                                    Edition
+                                </label>
+<div class="mt-1">
+<input class="shadow-sm focus:ring-primary focus:border-primary block w-full sm:text-sm border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-md h-10 px-3" id="edition" name="edition" placeholder="e.g. 1st Edition" type="text" value="<?= htmlspecialchars($_POST['edition'] ?? '') ?>"/>
+</div>
+</div>
+<!-- Cover URL Field -->
+<div class="sm:col-span-3">
+<label class="block text-sm font-medium text-slate-700 dark:text-slate-300" for="cover_url">
+                                    Cover Image URL
+                                </label>
+<div class="mt-1">
+<input class="shadow-sm focus:ring-primary focus:border-primary block w-full sm:text-sm border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-md h-10 px-3" id="cover_url" name="cover_url" placeholder="https://example.com/cover.jpg" type="url" value="<?= htmlspecialchars($_POST['cover_url'] ?? '') ?>"/>
+</div>
+</div>
+<!-- Description Field -->
+<div class="sm:col-span-6">
+<label class="block text-sm font-medium text-slate-700 dark:text-slate-300" for="description">
+                                    Description
+                                </label>
+<div class="mt-1">
+<textarea class="shadow-sm focus:ring-primary focus:border-primary block w-full sm:text-sm border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-md px-3 py-2" id="description" name="description" rows="4" placeholder="Book description..."><?= htmlspecialchars($_POST['description'] ?? '') ?></textarea>
+</div>
 </div>
 </div>
 </div>
 <!-- Form Actions -->
-<div class="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between sm:px-8">
-<button class="text-sm font-medium text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white" type="button">
-                            Cancel
-                        </button>
-<button class="inline-flex justify-center py-2 px-6 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors" type="submit">
-                            Save Book
-                        </button>
+<div class="bg-slate-100 dark:bg-slate-800 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+    <button class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary hover:bg-primary/80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+        Add Book
+    </button>
+    <button class="inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+        Cancel
+    </button>
 </div>
 </div>
 </form>
-<!-- Bottom Utility Action -->
-<div class="mt-8 flex justify-center">
-<button class="group inline-flex items-center px-4 py-2 border border-slate-300 dark:border-slate-600 shadow-sm text-sm font-medium rounded-md text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary" type="button">
-<span class="material-icons text-slate-400 group-hover:text-primary mr-2 text-lg">code</span>
-                    Display Source
-                </button>
-</div>
-</div>
 </main>
 <style>
         /* Custom scrollbar for the authors list */

@@ -130,9 +130,9 @@ $authors = getAllAuthors();
 ?>
 <?php foreach ($authors as $author): ?>
 <tr class="hover:bg-primary/5 transition-colors group">
-    <td class="px-6 py-4 whitespace-nowrap font-mono text-sm text-slate-600 dark:text-slate-400">AUTH-<?php echo str_pad($author['author_id'], 5, '0', STR_PAD_LEFT); ?></td>
+    <td class="px-6 py-4 whitespace-nowrap font-mono text-sm text-slate-600 dark:text-slate-400">AUTH-<?php echo str_pad($author['AUTHOR_ID'], 5, '0', STR_PAD_LEFT); ?></td>
     <td class="px-6 py-4 whitespace-nowrap">
-        <a class="text-primary font-medium hover:underline decoration-2 underline-offset-4" href="index.php?page=authordetails&id=<?php echo $author['author_id']; ?>"><?php echo htmlspecialchars($author['name']); ?></a>
+        <a class="text-primary font-medium hover:underline decoration-2 underline-offset-4" href="index.php?page=authordetails&id=<?php echo $author['AUTHOR_ID']; ?>"><?php echo htmlspecialchars($author['NAME']); ?></a>
     </td>
     <td class="px-6 py-4 whitespace-nowrap text-right font-semibold text-slate-900 dark:text-white">-</td>
     <td class="px-6 py-4 whitespace-nowrap text-right">

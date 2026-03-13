@@ -7,3 +7,10 @@
 2026-02-16T13:39:22+00:00 | AddAuthor.php loaded | METHOD: POST
 2026-02-16T13:42:12+00:00 | AddAuthor.php loaded | METHOD: POST
 2026-02-16 13:42:12 | addAuthor called | name: Erastus Even | biography: 
+2026-03-13T06:28:19+00:00 | AddAuthor.php loaded | METHOD: GET
+2026-03-13T06:28:27+00:00 | AddAuthor.php loaded | METHOD: POST
+2026-03-13 06:28:27 | addAuthor called | name: dzfgdg | biography: szdfzsdf
+2026-03-13T06:35:33+00:00 | AddAuthor.php loaded | METHOD: GET
+2026-03-13T06:53:59+00:00 | AddAuthor.php loaded | METHOD: GET
+2026-03-13T06:54:08+00:00 | AddAuthor.php loaded | METHOD: POST
+2026-03-13 06:54:08 | addAuthor called | name: Even | biography: xdfz
