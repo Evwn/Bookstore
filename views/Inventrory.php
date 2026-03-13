@@ -179,199 +179,47 @@ $books = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     Actions
                                 </th></tr>
 </thead>
-<tbody class="bg-white divide-y divide-slate-200">
-<?php foreach ($books as $index => $book): ?>
-<tr class="hover:bg-slate-50 transition-colors">
-<td class="px-6 py-4 whitespace-nowrap text-center">
-<div class="flex items-center justify-center h-full">
-<input class="focus:ring-primary h-4 w-4 text-primary border-slate-300" id="book-<?= $index + 1 ?>" name="book-selection" type="radio" value="<?= $book['BOOK_ID'] ?? 0 ?>"/>
-</div>
-</td>
-<td class="px-6 py-4">
-<div class="flex items-center">
-<div class="h-12 w-8 flex-shrink-0 rounded bg-slate-200 overflow-hidden shadow-sm mr-4 relative">
-<?php if (($book['COVER_URL'] ?? '') !== ''): ?>
-<img src="<?= htmlspecialchars($book['COVER_URL'] ?? '') ?>" alt="Book cover" class="w-full h-full object-cover">
-<?php else: ?>
-<div class="absolute inset-0 bg-gradient-to-tr from-slate-300 to-slate-100" data-alt="Abstract gradient representing book cover"></div>
-<?php endif; ?>
-</div>
-<div>
-<a class="text-base font-semibold text-primary hover:underline hover:text-primary-hover block" href="index.php?page=bookdetails&id=<?= $book['BOOK_ID'] ?? 0 ?>"><?= htmlspecialchars($book['TITLE'] ?? 'No Title') ?></a>
-<div class="text-sm text-slate-500"><?= htmlspecialchars($book['AUTHOR_NAME'] ?? 'Unknown Author') ?></div>
-</div>
-</div>
-</td>
-<td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500 font-mono">
-                                    <?= htmlspecialchars($book['ISBN'] ?? 'N/A') ?>
-                                </td>
-<td class="px-6 py-4 whitespace-nowrap text-sm text-slate-900 text-center font-medium">
-                                    <?= $book['STOCK'] ?? 0 ?>
-                                </td>
-<td class="px-6 py-4 whitespace-nowrap">
-<div class="relative rounded-md shadow-sm">
-<input class="focus:ring-primary focus:border-primary block w-full sm:text-sm border-slate-300 rounded-md text-right pr-8" id="qty-sold-<?= $index + 1 ?>" min="0" name="qty-sold-<?= $book['BOOK_ID'] ?? 0 ?>" placeholder="0" type="number"/>
-<div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-<span class="text-slate-400 text-xs">pcs</span>
-</div>
-</div>
-</td>
-<td class="px-6 py-4 whitespace-nowrap text-right">
-<button class="p-2 text-slate-400 hover:text-primary transition-colors rounded-lg hover:bg-primary/5" onclick="window.location.href='index.php?page=editbook&id=<?= $book['BOOK_ID'] ?? 0 ?>'">
-<span class="material-icons" style="font-size: 20px;">edit</span>
-</button>
-</td>
-</tr>
-<?php endforeach; ?>
-</tbody>
-<tr class="hover:bg-slate-50 transition-colors">
-<td class="px-6 py-4 whitespace-nowrap text-center">
-<div class="flex items-center justify-center h-full">
-<input class="focus:ring-primary h-4 w-4 text-primary border-slate-300" id="book-1" name="book-selection" type="radio"/>
-</div>
-</td>
-<td class="px-6 py-4">
-<div class="flex items-center">
-<div class="h-12 w-8 flex-shrink-0 rounded bg-slate-200 overflow-hidden shadow-sm mr-4 relative">
-<!-- Placeholder for book cover -->
-<div class="absolute inset-0 bg-gradient-to-tr from-slate-300 to-slate-100" data-alt="Abstract gradient representing book cover"></div>
-</div>
-<div>
-<a class="text-base font-semibold text-primary hover:underline hover:text-primary-hover block" href="#">Refactoring UI</a>
-<div class="text-sm text-slate-500">Adam Wathan &amp; Steve Schoger</div>
-</div>
-</div>
-</td>
-<td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500 font-mono">
-                                    978-0132350884
-                                </td>
-<td class="px-6 py-4 whitespace-nowrap text-sm text-slate-900 text-center font-medium">
-                                    42
-                                </td>
-<td class="px-6 py-4 whitespace-nowrap">
-<div class="relative rounded-md shadow-sm">
-<input class="focus:ring-primary focus:border-primary block w-full sm:text-sm border-slate-300 rounded-md text-right pr-8" id="qty-sold-1" min="0" name="qty-sold-1" placeholder="0" type="number"/>
-<div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-<span class="text-slate-400 text-xs">pcs</span>
-</div>
-</div>
-</td>
-<td class="px-6 py-4 whitespace-nowrap text-right">
-<button class="p-2 text-slate-400 hover:text-primary transition-colors rounded-lg hover:bg-primary/5" onclick="window.location.href='index.php?page=editbook'">
-<span class="material-icons" style="font-size: 20px;">edit</span>
-</button>
-</td>
-</tr>
-<!-- Row 2 -->
-<tr class="bg-primary-light/10 ring-1 ring-inset ring-primary/20">
-<td class="px-6 py-4 whitespace-nowrap text-center">
-<div class="flex items-center justify-center h-full">
-<input checked="" class="focus:ring-primary h-4 w-4 text-primary border-slate-300" id="book-2" name="book-selection" type="radio"/>
-</div>
-</td>
-<td class="px-6 py-4">
-<div class="flex items-center">
-<div class="h-12 w-8 flex-shrink-0 rounded bg-slate-200 overflow-hidden shadow-sm mr-4 relative">
-<div class="absolute inset-0 bg-gradient-to-br from-blue-200 to-indigo-300" data-alt="Abstract blue gradient book cover"></div>
-</div>
-<div>
-<a class="text-base font-semibold text-primary hover:underline hover:text-primary-hover block" href="#">Clean Code</a>
-<div class="text-sm text-slate-500">Robert C. Martin</div>
-</div>
-</div>
-</td>
-<td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500 font-mono">
-                                    978-0132350884
-                                </td>
-<td class="px-6 py-4 whitespace-nowrap text-sm text-slate-900 text-center font-medium">
-                                    15
-                                </td>
-<td class="px-6 py-4 whitespace-nowrap">
-<div class="relative rounded-md shadow-sm">
-<input class="focus:ring-primary focus:border-primary block w-full sm:text-sm border-primary rounded-md text-right pr-8 font-bold text-slate-900" id="qty-sold-2" min="0" name="qty-sold-2" type="number" value="5"/>
-<div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-<span class="text-slate-400 text-xs">pcs</span>
-</div>
-</div>
-</td>
-<td class="px-6 py-4 whitespace-nowrap text-right">
-<button class="p-2 text-slate-400 hover:text-primary transition-colors rounded-lg hover:bg-primary/5" onclick="window.location.href='index.php?page=editbook'">
-<span class="material-icons" style="font-size: 20px;">edit</span>
-</button>
-</td>
-</tr>
-<!-- Row 3 -->
-<tr class="hover:bg-slate-50 transition-colors">
-<td class="px-6 py-4 whitespace-nowrap text-center">
-<div class="flex items-center justify-center h-full">
-<input class="focus:ring-primary h-4 w-4 text-primary border-slate-300" id="book-3" name="book-selection" type="radio"/>
-</div>
-</td>
-<td class="px-6 py-4">
-<div class="flex items-center">
-<div class="h-12 w-8 flex-shrink-0 rounded bg-slate-200 overflow-hidden shadow-sm mr-4 relative">
-<div class="absolute inset-0 bg-gradient-to-t from-gray-200 to-gray-400" data-alt="Abstract gray gradient book cover"></div>
-</div>
-<div>
-<a class="text-base font-semibold text-primary hover:underline hover:text-primary-hover block" href="#">The Pragmatic Programmer</a>
-<div class="text-sm text-slate-500">Andrew Hunt &amp; David Thomas</div>
-</div>
-</div>
-</td>
-<td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500 font-mono">
-                                    978-0201616224
-                                </td>
-<td class="px-6 py-4 whitespace-nowrap text-sm text-slate-900 text-center font-medium">
-                                    8
-                                </td>
-<td class="px-6 py-4 whitespace-nowrap">
-<div class="relative rounded-md shadow-sm">
-<input class="focus:ring-primary focus:border-primary block w-full sm:text-sm border-slate-300 rounded-md text-right pr-8" id="qty-sold-3" min="0" name="qty-sold-3" placeholder="0" type="number"/>
-<div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-<span class="text-slate-400 text-xs">pcs</span>
-</div>
-</div>
-</td>
-<td class="px-6 py-4 whitespace-nowrap text-right">
-<button class="p-2 text-slate-400 hover:text-primary transition-colors rounded-lg hover:bg-primary/5" onclick="window.location.href='index.php?page=editbook'">
-<span class="material-icons" style="font-size: 20px;">edit</span>
-</button>
-</td>
-</tr>
-<!-- Row 4 -->
-<tr class="hover:bg-slate-50 transition-colors">
-<td class="px-6 py-4 whitespace-nowrap text-center">
-<div class="flex items-center justify-center h-full">
-<input class="focus:ring-primary h-4 w-4 text-primary border-slate-300" id="book-4" name="book-selection" type="radio"/>
-</div>
-</td>
-<td class="px-6 py-4">
-<div class="flex items-center">
-<div class="h-12 w-8 flex-shrink-0 rounded bg-slate-200 overflow-hidden shadow-sm mr-4 relative">
-<div class="absolute inset-0 bg-gradient-to-r from-red-200 to-orange-100" data-alt="Abstract red gradient book cover"></div>
-</div>
-<div>
-<a class="text-base font-semibold text-primary hover:underline hover:text-primary-hover block" href="#">Design Patterns</a>
-<div class="text-sm text-slate-500">Erich Gamma et al.</div>
-</div>
-</div>
-</td>
-<td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500 font-mono">
-                                    978-0201633610
-                                </td>
-<td class="px-6 py-4 whitespace-nowrap text-sm text-slate-900 text-center font-medium">
-                                    112
-                                </td>
-<td class="px-6 py-4 whitespace-nowrap">
-<div class="relative rounded-md shadow-sm">
-<input class="focus:ring-primary focus:border-primary block w-full sm:text-sm border-slate-300 rounded-md text-right pr-8" id="qty-sold-4" min="0" name="qty-sold-4" placeholder="0" type="number"/>
-<div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-<span class="text-slate-400 text-xs">pcs</span>
-</div>
-</div>
-</td>
-</tr>
-</tbody>
+                <tbody class="bg-white divide-y divide-slate-200">
+                <?php foreach ($books as $book): ?>
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-6 py-4 whitespace-nowrap text-center">
+                        <div class="flex items-center justify-center h-full">
+                            <input class="focus:ring-primary h-4 w-4 text-primary border-slate-300" name="book-selection" type="radio" value="<?= $book['BOOK_ID'] ?? 0 ?>"/>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="flex items-center">
+                            <div class="h-12 w-8 flex-shrink-0 rounded bg-slate-200 overflow-hidden shadow-sm mr-4 relative">
+                                <?php if (($book['COVER_URL'] ?? '') !== ''): ?>
+                                    <img src="<?= htmlspecialchars($book['COVER_URL'] ?? '') ?>" alt="Book cover" class="w-full h-full object-cover">
+                                <?php else: ?>
+                                    <div class="absolute inset-0 bg-gradient-to-tr from-slate-300 to-slate-100"></div>
+                                <?php endif; ?>
+                            </div>
+                            <div>
+                                <a class="text-base font-semibold text-primary hover:underline hover:text-primary-hover block" href="index.php?page=bookdetails&id=<?= $book['BOOK_ID'] ?? 0 ?>"><?= htmlspecialchars($book['TITLE'] ?? 'No Title') ?></a>
+                                <div class="text-sm text-slate-500"><?= htmlspecialchars($book['AUTHOR_NAME'] ?? 'Unknown Author') ?></div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500 font-mono">
+                        <?= htmlspecialchars($book['ISBN'] ?? 'N/A') ?>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-900 text-center font-medium">
+                        <?= $book['STOCK'] ?? 0 ?>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right">
+                        <a href="index.php?page=editbook&id=<?= $book['BOOK_ID'] ?? 0 ?>" class="p-2 text-slate-400 hover:text-primary transition-colors rounded-lg hover:bg-primary/5">
+                            <span class="material-icons" style="font-size: 20px;">edit</span>
+                        </a>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+                <?php if (count($books) === 0): ?>
+                <tr><td colspan="5" class="px-6 py-4 text-slate-500">No books found in the database.</td></tr>
+                <?php endif; ?>
+                </tbody>
+
 </table>
 </div>
 <!-- Pagination / Footer of table -->

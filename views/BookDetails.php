@@ -172,11 +172,15 @@ if (isset($_POST['delete_book']) && isset($book['book_id'])) {
 </div>
 </div>
 <div class="p-4 text-center">
-<div class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 mb-2">
-                                    In Stock
-                                </div>
-<h3 class="font-semibold text-slate-900 dark:text-white"><?= htmlspecialchars($book['title'] ?? '') ?></h3>
-<p class="text-sm text-slate-500 dark:text-slate-400">Edition: <?= htmlspecialchars($book['edition'] ?? 'N/A') ?></p>
+    <?php if ($book): ?>
+        <div class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 mb-2">
+            <?= ($book['stock'] ?? 0) > 0 ? 'In Stock' : 'Out of Stock' ?>
+        </div>
+        <h3 class="font-semibold text-slate-900 dark:text-white"><?= htmlspecialchars($book['title'] ?? '') ?></h3>
+        <p class="text-sm text-slate-500 dark:text-slate-400">Edition: <?= htmlspecialchars($book['edition'] ?? 'N/A') ?></p>
+    <?php else: ?>
+        <div class="text-slate-500">No book found.</div>
+    <?php endif; ?>
 </div>
 </div>
 <!-- Quick Stats Card -->
@@ -238,14 +242,19 @@ if (isset($_POST['delete_book']) && isset($book['book_id'])) {
 <dd class="text-base text-slate-900 dark:text-white"><?= htmlspecialchars($book['published_year'] ?? '') ?></dd>
 </div>
 <div class="col-span-2 sm:col-span-1">
-<dt class="text-sm font-medium text-slate-500 dark:text-slate-400 mb-2">Authors</dt>
-<dd class="flex flex-wrap gap-2">
-<a class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all group" href="#">
-<div class="w-5 h-5 rounded-full bg-primary/20 mr-2 flex items-center justify-center text-xs font-bold group-hover:bg-white/20">
-    <?= isset($book['author_name']) ? strtoupper(substr($book['author_name'], 0, 2)) : '' ?>
-</div>
-<?= htmlspecialchars($book['author_name'] ?? 'Unknown') ?>
-</dd>
+    <dt class="text-sm font-medium text-slate-500 dark:text-slate-400 mb-2">Authors</dt>
+    <dd class="flex flex-wrap gap-2">
+        <?php if (!empty($book['author_name'])): ?>
+            <a class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all group" href="#">
+                <div class="w-5 h-5 rounded-full bg-primary/20 mr-2 flex items-center justify-center text-xs font-bold group-hover:bg-white/20">
+                    <?= strtoupper(substr($book['author_name'], 0, 2)) ?>
+                </div>
+                <?= htmlspecialchars($book['author_name']) ?>
+            </a>
+        <?php else: ?>
+            <span class="text-slate-400">Unknown</span>
+        <?php endif; ?>
+    </dd>
 </div>
 <div class="col-span-2 mt-2">
 <dt class="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Description</dt>

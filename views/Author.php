@@ -97,79 +97,34 @@
 </div>
 </div>
 <!-- Data Table -->
-<div class="overflow-x-auto">
-<table class="w-full text-left border-collapse">
-<thead>
-<tr class="bg-slate-50 dark:bg-slate-800/50">
-<th class="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-slate-500 border-b border-slate-200 dark:border-slate-800">
-<div class="flex items-center gap-1 cursor-pointer hover:text-primary">
-                                    Author ID
-                                    <span class="material-icons text-xs">unfold_more</span>
-</div>
-</th>
-<th class="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-slate-500 border-b border-slate-200 dark:border-slate-800">
-<div class="flex items-center gap-1 cursor-pointer hover:text-primary">
-                                    Author Name
-                                    <span class="material-icons text-xs">unfold_more</span>
-</div>
-</th>
-<th class="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-slate-500 border-b border-slate-200 dark:border-slate-800 text-right">
-<div class="flex items-center justify-end gap-1 cursor-pointer hover:text-primary">
-                                    Total Royalty
-                                    <span class="material-icons text-xs">unfold_more</span>
-</div>
-</th>
-<th class="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-slate-500 border-b border-slate-200 dark:border-slate-800 text-right">
-                                Actions
-                            </th>
-</tr>
-</thead>
 <?php
 require_once __DIR__ . '/../controllers/AuthorController.php';
 $authors = getAllAuthors();
 ?>
-<?php foreach ($authors as $author): ?>
-<tr class="hover:bg-primary/5 transition-colors group">
-    <td class="px-6 py-4 whitespace-nowrap font-mono text-sm text-slate-600 dark:text-slate-400">AUTH-<?php echo str_pad($author['AUTHOR_ID'], 5, '0', STR_PAD_LEFT); ?></td>
-    <td class="px-6 py-4 whitespace-nowrap">
-        <a class="text-primary font-medium hover:underline decoration-2 underline-offset-4" href="index.php?page=authordetails&id=<?php echo $author['AUTHOR_ID']; ?>"><?php echo htmlspecialchars($author['NAME']); ?></a>
-    </td>
-    <td class="px-6 py-4 whitespace-nowrap text-right font-semibold text-slate-900 dark:text-white">-</td>
-    <td class="px-6 py-4 whitespace-nowrap text-right">
-        <button class="text-slate-400 hover:text-primary transition-colors">
-            <span class="material-icons">more_vert</span>
-        </button>
-    </td>
-</tr>
-<?php endforeach; ?>
-</tbody>
+<table class="w-full text-left border-collapse">
+    <thead>
+        <tr class="bg-slate-50 dark:bg-slate-800/50">
+            <th class="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-slate-500 border-b border-slate-200 dark:border-slate-800">Author ID</th>
+            <th class="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-slate-500 border-b border-slate-200 dark:border-slate-800">Author Name</th>
+            <th class="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-slate-500 border-b border-slate-200 dark:border-slate-800 text-right">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($authors as $author): ?>
+            <tr class="hover:bg-primary/5 transition-colors group">
+                <td class="px-6 py-4 font-mono text-sm text-slate-600 dark:text-slate-400">AUTH-<?php echo str_pad($author['AUTHOR_ID'], 5, '0', STR_PAD_LEFT); ?></td>
+                <td class="px-6 py-4">
+                    <a class="text-primary font-medium hover:underline decoration-2 underline-offset-4" href="index.php?page=authordetails&id=<?php echo $author['AUTHOR_ID']; ?>"><?php echo htmlspecialchars($author['NAME']); ?></a>
+                </td>
+                <td class="px-6 py-4 text-right">
+                    <a href="index.php?page=editauthor&id=<?php echo $author['AUTHOR_ID']; ?>" class="text-slate-400 hover:text-primary transition-colors">Edit</a>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        <?php if (count($authors) === 0): ?>
+            <tr><td colspan="3" class="px-6 py-4 text-slate-500">No authors found in the database.</td></tr>
+        <?php endif; ?>
+    </tbody>
 </table>
-</div>
-<!-- Pagination -->
-<div class="p-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-<span class="text-sm text-slate-500">Showing 1 to 5 of 124 authors</span>
-<div class="flex items-center gap-1">
-<button class="p-2 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-400 hover:text-primary hover:border-primary disabled:opacity-50 disabled:cursor-not-allowed" disabled="">
-<span class="material-icons text-sm">chevron_left</span>
-</button>
-<button class="px-3 py-1 bg-primary text-white rounded-lg text-sm font-semibold shadow-sm">1</button>
-<button class="px-3 py-1 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-600 dark:text-slate-400 hover:bg-slate-50">2</button>
-<button class="px-3 py-1 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-600 dark:text-slate-400 hover:bg-slate-50">3</button>
-<span class="px-2 text-slate-400 text-sm">...</span>
-<button class="px-3 py-1 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-600 dark:text-slate-400 hover:bg-slate-50">25</button>
-<button class="p-2 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-400 hover:text-primary hover:border-primary">
-<span class="material-icons text-sm">chevron_right</span>
-</button>
-</div>
-</div>
-</div>
-<!-- Footer Section with mandatory button -->
-<footer class="mt-12 py-6 border-t border-slate-200 dark:border-slate-800 flex flex-col items-center gap-4">
-<button class="inline-flex items-center px-6 py-3 border-2 border-primary/20 bg-primary/5 text-primary font-bold rounded-lg hover:bg-primary hover:text-white transition-all">
-<span class="material-icons mr-2">code</span>
-                Display Source
-            </button>
-<p class="text-xs text-slate-400">© 2024 Bookstore Management System Admin. All rights reserved.</p>
-</footer>
 </main>
 </body></html>

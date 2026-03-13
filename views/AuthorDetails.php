@@ -1,15 +1,25 @@
 <?php
 require_once __DIR__ . '/../controllers/AuthorController.php';
+require_once __DIR__ . '/../controllers/BookController.php';
 $success = $error = '';
-if (isset($_GET['delete'])) {
-    $id = intval($_GET['delete']);
-    if (deleteAuthor($id)) {
-        $success = 'Author deleted.';
+$author = null;
+$books = [];
+$id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+if ($id) {
+    $author = getAuthorById($id);
+    if ($author) {
+        $allBooks = getAllBooks();
+        foreach ($allBooks as $book) {
+            if ($book['AUTHOR_ID'] == $id) {
+                $books[] = $book;
+            }
+        }
     } else {
-        $error = 'Failed to delete author.';
+        $error = 'Author not found.';
     }
+} else {
+    $error = 'No author selected.';
 }
-$authors = getAllAuthors();
 ?>
 <!DOCTYPE html>
 
@@ -60,44 +70,53 @@ $authors = getAllAuthors();
 </head>
 <body class="bg-background-light dark:bg-background-dark font-display text-neutral-800 dark:text-neutral-100 min-h-screen flex flex-col">
 <!-- Top Navigation / Breadcrumbs -->
-<header class="bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-800 sticky top-0 z-30">
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-<div class="flex justify-between h-16">
-<div class="flex items-center">
-<div class="flex-shrink-0 flex items-center gap-2">
-<span class="material-icons text-primary text-2xl">menu_book</span>
-<span class="font-bold text-xl tracking-tight text-neutral-900 dark:text-white">BookStore<span class="text-primary">Admin</span></span>
-</div>
-<nav aria-label="Breadcrumb" class="hidden md:flex ml-10 space-x-1">
-<ol class="flex items-center space-x-2 text-sm text-neutral-500 dark:text-neutral-400">
-<li><a class="hover:text-primary transition-colors" href="index.php?page=dashboard">Dashboard</a></li>
-<li><span class="material-icons text-base">chevron_right</span></li>
-<li><a class="hover:text-primary transition-colors" href="index.php?page=authordetails">Authors</a></li>
-<li><span class="material-icons text-base">chevron_right</span></li>
-<li><span aria-current="page" class="font-medium text-neutral-900 dark:text-white">Author Profile</span></li>
-</ol>
+<nav class="bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-800 sticky top-0 z-30">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16 items-center">
+            <div class="flex items-center gap-3">
+                <span class="material-icons text-primary text-2xl">menu_book</span>
+                <span class="font-bold text-xl tracking-tight text-neutral-900 dark:text-white">BookStore<span class="text-primary">Admin</span></span>
+            </div>
+            <div class="flex gap-4">
+                <a href="index.php?page=dashboard" class="text-neutral-500 dark:text-neutral-300 hover:text-primary px-3 py-2 rounded transition">Dashboard</a>
+                <a href="index.php?page=author" class="text-neutral-500 dark:text-neutral-300 hover:text-primary px-3 py-2 rounded transition">Authors</a>
+                <a href="index.php?page=inventrory" class="text-neutral-500 dark:text-neutral-300 hover:text-primary px-3 py-2 rounded transition">Inventory</a>
+                <a href="index.php?page=order" class="text-neutral-500 dark:text-neutral-300 hover:text-primary px-3 py-2 rounded transition">Orders</a>
+            </div>
+        </div>
+    </div>
 </nav>
-</div>
-<div class="flex items-center gap-4">
-<button class="p-2 rounded-full text-neutral-500 hover:text-primary hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors">
-<span class="material-icons">notifications_none</span>
-</button>
-<div class="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-sm">
-                        AD
-                    </div>
-</div>
-</div>
-</div>
-</header>
 <!-- Main Content Area -->
 <main class="flex-1 py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
 <!-- Header Section with Actions -->
 <div class="md:flex md:items-center md:justify-between mb-8">
 <div class="flex-1 min-w-0">
 <h2 class="text-2xl font-bold leading-7 text-neutral-900 dark:text-white sm:text-3xl sm:truncate">
-                    Author Details
-                </h2>
-<p class="mt-1 text-sm text-neutral-500 dark:text-neutral-400">Manage author profile and review royalty distribution.</p>
+    Author Details
+</h2>
+<?php if ($error): ?>
+    <div class="mb-4 p-3 bg-red-100 text-red-800 rounded"><?= htmlspecialchars($error) ?></div>
+<?php endif; ?>
+<?php if ($author): ?>
+    <div class="mt-4 mb-8">
+        <h3 class="text-xl font-semibold text-primary mb-2"><?= htmlspecialchars($author['NAME']) ?></h3>
+        <div class="mb-2 text-neutral-700 dark:text-neutral-200"><strong>Biography:</strong></div>
+        <div class="mb-4 text-neutral-600 dark:text-neutral-300"><?= nl2br(htmlspecialchars($author['BIOGRAPHY'] ?? 'No biography.')) ?></div>
+        <a href="index.php?page=editauthor&id=<?= $author['AUTHOR_ID'] ?>" class="inline-block px-4 py-2 bg-primary text-white rounded-lg font-medium hover:bg-primary-dark transition">Edit Author</a>
+    </div>
+    <div class="mb-8">
+        <h4 class="text-lg font-bold mb-2">Books by this Author</h4>
+        <?php if (count($books) > 0): ?>
+            <ul class="list-disc pl-6">
+                <?php foreach ($books as $book): ?>
+                    <li><a href="index.php?page=bookdetails&id=<?= $book['BOOK_ID'] ?>" class="text-primary hover:underline"><?= htmlspecialchars($book['TITLE']) ?></a></li>
+                <?php endforeach; ?>
+            </ul>
+        <?php else: ?>
+            <div class="text-neutral-500">No books found for this author.</div>
+        <?php endif; ?>
+    </div>
+<?php endif; ?>
 </div>
 <div class="mt-4 flex md:mt-0 md:ml-4">
 <button class="inline-flex items-center px-4 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg shadow-sm text-sm font-medium text-neutral-700 dark:text-neutral-200 bg-white dark:bg-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all" onclick="window.location.href='index.php?page=editauthor'" type="button">
