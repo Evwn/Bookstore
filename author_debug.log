@@ -17,3 +17,6 @@
 2026-03-16T14:58:58+00:00 | AddAuthor.php loaded | METHOD: GET
 2026-03-16T14:59:02+00:00 | AddAuthor.php loaded | METHOD: POST
 2026-03-16 14:59:02 | addAuthor called | name: sdeaf | biography: waerfwa
+2026-03-16T15:03:33+00:00 | AddAuthor.php loaded | METHOD: GET
+2026-03-16T15:03:37+00:00 | AddAuthor.php loaded | METHOD: POST
+2026-03-16 15:03:37 | addAuthor called | name: dfghg | biography: dfgsh
