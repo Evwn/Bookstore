@@ -22,39 +22,39 @@ function resetSystem() {
     }
 }
 
-// ── Author Functions ──────────────────────────
-function addAuthor($name, $biography = '') {
-    global $pdo;
-    try {
-        $stmt = $pdo->prepare('INSERT INTO AUTHORS (NAME, BIOGRAPHY) VALUES (?, ?)');
-        return $stmt->execute([trim($name), trim($biography)]);
-    } catch (Exception $e) {
-        error_log("addAuthor error: " . $e->getMessage());
-        return false;
-    }
-}
+// // ── Author Functions ──────────────────────────
+// function addAuthor($name, $biography = '') {
+//     global $pdo;
+//     try {
+//         $stmt = $pdo->prepare('INSERT INTO AUTHORS (NAME, BIOGRAPHY) VALUES (?, ?)');
+//         return $stmt->execute([trim($name), trim($biography)]);
+//     } catch (Exception $e) {
+//         error_log("addAuthor error: " . $e->getMessage());
+//         return false;
+//     }
+// }
 
-function getAllAuthors() {
-    global $pdo;
-    try {
-        return $pdo->query('SELECT * FROM AUTHORS ORDER BY NAME')->fetchAll();
-    } catch (Exception $e) {
-        error_log("getAllAuthors error: " . $e->getMessage());
-        return [];
-    }
-}
+// function getAllAuthors() {
+//     global $pdo;
+//     try {
+//         return $pdo->query('SELECT * FROM AUTHORS ORDER BY NAME')->fetchAll();
+//     } catch (Exception $e) {
+//         error_log("getAllAuthors error: " . $e->getMessage());
+//         return [];
+//     }
+// }
 
-function getAuthorById($id) {
-    global $pdo;
-    try {
-        $stmt = $pdo->prepare('SELECT * FROM AUTHORS WHERE AUTHOR_ID = ?');
-        $stmt->execute([$id]);
-        return $stmt->fetch();
-    } catch (Exception $e) {
-        error_log("getAuthorById error: " . $e->getMessage());
-        return false;
-    }
-}
+// function getAuthorById($id) {
+//     global $pdo;
+//     try {
+//         $stmt = $pdo->prepare('SELECT * FROM AUTHORS WHERE AUTHOR_ID = ?');
+//         $stmt->execute([$id]);
+//         return $stmt->fetch();
+//     } catch (Exception $e) {
+//         error_log("getAuthorById error: " . $e->getMessage());
+//         return false;
+//     }
+// }
 
 // ── Book Details (with order history) ────────
 function getBookDetails($book_id) {

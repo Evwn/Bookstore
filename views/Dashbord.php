@@ -1,4 +1,13 @@
 <?php
+ob_start();
+require_once __DIR__ . '/../controllers/AssignmentController.php'; // resetSystem
+
+// handle reset request BEFORE outputting anything
+if (isset($_POST['reset_system'])) {
+    resetSystem();
+}
+
+// now include your other controllers and start output
 require_once __DIR__ . '/../controllers/BookController.php';
 require_once __DIR__ . '/../controllers/AuthorController.php';
 require_once __DIR__ . '/../controllers/OrderController.php';
@@ -6,13 +15,28 @@ require_once __DIR__ . '/../controllers/OrderController.php';
 $books = getAllBooks();
 $authors = getAllAuthors();
 $orders = getAllOrders();
+
 ?>
 <div class="flex-1 overflow-y-auto p-6 md:p-8">
     <div class="max-w-6xl mx-auto space-y-8">
         <div>
             <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">Bookstore Admin Dashboard</h2>
             <p class="text-slate-500 dark:text-slate-400">All data below is live from your database.</p>
+
+            <!-- RESET BUTTON -->
+<!-- RESET BUTTON -->
+<form method="POST" action="index.php?page=<?php echo htmlspecialchars($page); ?>" 
+      onsubmit="return confirm('This will delete ALL data. Continue?');" 
+      class="mt-4">
+    <button 
+        type="submit" 
+        name="reset_system"
+        class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm">
+        Reset System
+    </button>
+</form>
         </div>
+
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6">
                 <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-2">Books</h3>
@@ -30,6 +54,7 @@ $orders = getAllOrders();
                 <a href="index.php?page=order" class="text-primary hover:underline text-sm">View Orders</a>
             </div>
         </div>
+
         <div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6 mt-8">
             <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-4">Recent Books</h3>
             <table class="w-full text-left border-collapse">
@@ -52,9 +77,12 @@ $orders = getAllOrders();
                     <?php endforeach; ?>
                 </tbody>
             </table>
+
             <?php if (count($books) === 0): ?>
                 <div class="text-slate-500 mt-4">No books found in the database.</div>
             <?php endif; ?>
         </div>
     </div>
 </div>
+<?php
+ob_end_flush();
