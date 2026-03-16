@@ -27,8 +27,8 @@ Books
 Authors
 </a>
 <div class="pt-4 pb-2 px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider">Management</div>
-<a class="flex items-center gap-3 px-3 py-2.5 <?php echo ($page === 'customer' || $page === 'editcustomer') ? 'bg-primary/10 text-primary dark:text-blue-400 rounded-lg font-medium' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-primary dark:hover:text-blue-400 rounded-lg transition-colors group'; ?>" href="index.php?page=customer">
-<span class="material-icons text-xl <?php echo ($page === 'customer' || $page === 'editcustomer') ? '' : 'text-slate-400 group-hover:text-primary dark:group-hover:text-blue-400'; ?>">people</span>
+<a class="flex items-center gap-3 px-3 py-2.5 <?php echo ($page === 'customer' || $page === 'editcustomer' || $page === 'addcustomer') ? 'bg-primary/10 text-primary dark:text-blue-400 rounded-lg font-medium' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-primary dark:hover:text-blue-400 rounded-lg transition-colors group'; ?>" href="index.php?page=customer">
+<span class="material-icons text-xl <?php echo ($page === 'customer' || $page === 'editcustomer' || $page === 'addcustomer') ? '' : 'text-slate-400 group-hover:text-primary dark:group-hover:text-blue-400'; ?>">people</span>
 Customers
 </a>
 <a class="flex items-center gap-3 px-3 py-2.5 <?php echo ($page === 'order') ? 'bg-primary/10 text-primary dark:text-blue-400 rounded-lg font-medium' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-primary dark:hover:text-blue-400 rounded-lg transition-colors group'; ?>" href="index.php?page=order">

@@ -72,11 +72,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $id) {
 </div>
 </div>
 <!-- Form -->
+<?php if ($author): ?>
 <form action="#" class="space-y-6" method="POST">
 <?php if ($success): ?>
     <div class="mb-4 p-3 rounded bg-green-100 text-green-800"><?php echo $success; ?></div>
 <?php elseif ($error): ?>
     <div class="mb-4 p-3 rounded bg-red-100 text-red-800"><?php echo $error; ?></div>
+<?php endif; ?>
+<?php if ($author): ?>
+    <div class="mb-4 p-3 rounded bg-blue-100 text-blue-800">
+        <strong>Editing:</strong> <?php echo htmlspecialchars($author['NAME']); ?> (ID: <?php echo $author['AUTHOR_ID']; ?>)
+    </div>
 <?php endif; ?>
 <!-- Basic Info Card -->
 <div class="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 overflow-hidden">
@@ -87,32 +93,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $id) {
                     </h2>
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 <!-- Full Name -->
-<div>
+<div class="md:col-span-2">
 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" for="fullname">
-                            Full Name
+                            Author Name
                             </label>
-<input class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent" id="fullname" name="fullname" placeholder="Enter full name" type="text" value="<?php echo htmlspecialchars($_POST['fullname'] ?? ($author['name'] ?? '')); ?>"/>
-</div>
-<!-- Email -->
-<div>
-<label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" for="email">
-                            Email Address
-                            </label>
-<input class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent" id="email" name="email" placeholder="Enter email" type="email" value="george@example.com"/>
-</div>
-<!-- Phone -->
-<div>
-<label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" for="phone">
-                            Phone Number
-                            </label>
-<input class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent" id="phone" name="phone" placeholder="Enter phone number" type="tel" value="+1234567890"/>
-</div>
-<!-- Country -->
-<div>
-<label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" for="country">
-                            Country
-                            </label>
-<input class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent" id="country" name="country" placeholder="Enter country" type="text" value="United Kingdom"/>
+<input class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent" id="fullname" name="fullname" placeholder="Enter author name" type="text" value="<?php echo htmlspecialchars($_POST['fullname'] ?? ($author['NAME'] ?? '')); ?>" required/>
 </div>
 </div>
 </div>
@@ -129,20 +114,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $id) {
 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" for="biography">
                             Biography
                             </label>
-<textarea class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent" id="biography" name="biography" placeholder="Enter biography..." rows="4"><?php echo htmlspecialchars($_POST['biography'] ?? ($author['biography'] ?? '')); ?></textarea>
-</div>
-<!-- Notable Works -->
-<div>
-<label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" for="works">
-                            Notable Works
-                            </label>
-<textarea class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent" id="works" name="works" placeholder="List notable works" rows="3">1984, Animal Farm, Homage to Catalonia</textarea>
+<textarea class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent" id="biography" name="biography" placeholder="Enter biography..." rows="4"><?php echo htmlspecialchars($_POST['biography'] ?? ($author['BIOGRAPHY'] ?? '')); ?></textarea>
 </div>
 </div>
 </div>
 <!-- Buttons -->
 <div class="flex items-center justify-between pt-6">
-<button class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-gray-600 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 focus:outline-none transition-all" type="button">
+<button class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-gray-600 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 focus:outline-none transition-all" type="button" onclick="window.history.back()">
 <span class="material-icons text-lg mr-2">arrow_back</span>
                 Back
                 </button>
@@ -158,6 +136,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $id) {
 </div>
 </div>
 </form>
+<?php else: ?>
+<div class="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 p-8 text-center">
+    <span class="material-icons text-4xl text-gray-400 mb-4">person_off</span>
+    <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">Author Not Found</h3>
+    <p class="text-gray-500 dark:text-gray-400 mb-4">The author you're trying to edit could not be found.</p>
+    <a href="index.php?page=author" class="inline-flex items-center px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition">
+        <span class="material-icons text-sm mr-2">arrow_back</span>
+        Back to Authors
+    </a>
+</div>
+<?php endif; ?>
 </main>
 </body>
 </html>

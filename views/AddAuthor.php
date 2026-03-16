@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
 <span class="material-icons text-gray-400 text-lg">tag</span>
 </div>
-<input class="pl-10 block w-full rounded-lg border-gray-200 bg-gray-50 text-gray-500 sm:text-sm cursor-not-allowed dark:bg-gray-900/50 dark:border-gray-700 dark:text-gray-400 shadow-sm" disabled="" id="author_id" name="author_id" type="text" value="AUT-2023-0089"/>
+<input class="pl-10 block w-full rounded-lg border-gray-200 bg-gray-50 text-gray-500 sm:text-sm cursor-not-allowed dark:bg-gray-900/50 dark:border-gray-700 dark:text-gray-400 shadow-sm" disabled="" id="author_id" name="author_id" type="text" value="Auto-generated"/>
 </div>
 <p class="mt-1 text-xs text-gray-400">This ID will be permanently assigned upon saving.</p>
 </div>
@@ -136,75 +136,13 @@ document.addEventListener('DOMContentLoaded', function() {
 <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
 <div class="p-5 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center">
 <h3 class="text-base font-semibold text-gray-900 dark:text-white">Recently Added</h3>
-<a class="text-xs font-medium text-primary hover:text-blue-700" href="#">View All</a>
+<a class="text-xs font-medium text-primary hover:text-blue-700" href="index.php?page=author">View All</a>
 </div>
-<ul class="divide-y divide-gray-100 dark:divide-gray-700" role="list">
-<li class="p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-<div class="flex items-center space-x-3">
-<div class="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-bold text-sm">
-                                    GO
-                                </div>
-<div class="flex-1 min-w-0">
-<p class="text-sm font-medium text-gray-900 dark:text-white truncate">
-                                        George Orwell
-                                    </p>
-<p class="text-xs text-gray-500 truncate">
-                                        ID: 1042 • 2 mins ago
-                                    </p>
+<div class="p-4 text-center text-gray-500 dark:text-gray-400">
+<span class="material-icons text-3xl mb-2 opacity-50">person_add</span>
+<p class="text-sm">No recent authors</p>
+<p class="text-xs">Authors you add will appear here</p>
 </div>
-<div>
-<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
-                                        New
-                                    </span>
-</div>
-</div>
-</li>
-<li class="p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-<div class="flex items-center space-x-3">
-<div class="flex-shrink-0 h-10 w-10 rounded-full bg-pink-100 dark:bg-pink-900/30 flex items-center justify-center text-pink-600 dark:text-pink-400 font-bold text-sm">
-                                    JA
-                                </div>
-<div class="flex-1 min-w-0">
-<p class="text-sm font-medium text-gray-900 dark:text-white truncate">
-                                        Jane Austen
-                                    </p>
-<p class="text-xs text-gray-500 truncate">
-                                        ID: 1041 • 1 hour ago
-                                    </p>
-</div>
-</div>
-</li>
-<li class="p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-<div class="flex items-center space-x-3">
-<div class="flex-shrink-0 h-10 w-10 rounded-full bg-yellow-100 dark:bg-yellow-900/30 flex items-center justify-center text-yellow-600 dark:text-yellow-400 font-bold text-sm">
-                                    MT
-                                </div>
-<div class="flex-1 min-w-0">
-<p class="text-sm font-medium text-gray-900 dark:text-white truncate">
-                                        Mark Twain
-                                    </p>
-<p class="text-xs text-gray-500 truncate">
-                                        ID: 1040 • 3 hours ago
-                                    </p>
-</div>
-</div>
-</li>
-<li class="p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-<div class="flex items-center space-x-3">
-<div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400">
-<span class="material-icons text-sm">person</span>
-</div>
-<div class="flex-1 min-w-0">
-<p class="text-sm font-medium text-gray-900 dark:text-white truncate">
-                                        Agatha Christie
-                                    </p>
-<p class="text-xs text-gray-500 truncate">
-                                        ID: 1039 • Yesterday
-                                    </p>
-</div>
-</div>
-</li>
-</ul>
 </div>
 <!-- Helper Card -->
 <div class="bg-primary/5 border border-primary/20 rounded-xl p-5">

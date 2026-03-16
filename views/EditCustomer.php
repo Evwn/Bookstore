@@ -16,14 +16,14 @@ if (!isset($_GET['id'])) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $customer) {
     $loading = true;
-    $name = trim($_POST['name'] ?? $customer['name']);
-    $email = trim($_POST['email'] ?? $customer['email']);
-    $phone = trim($_POST['phone'] ?? $customer['phone']);
-    $address = trim($_POST['address'] ?? $customer['address']);
+    $name = trim($_POST['name'] ?? $customer['NAME']);
+    $email = trim($_POST['email'] ?? $customer['EMAIL']);
+    $phone = trim($_POST['phone'] ?? $customer['PHONE']);
+    $address = trim($_POST['address'] ?? $customer['ADDRESS']);
     if ($name && $email) {
-        if (updateCustomer($customer['customer_id'], $name, $email, $phone, $address)) {
-            $success = 'Customer updated.';
-            $customer = getCustomerById($customer['customer_id']);
+        if (updateCustomer($customer['CUSTOMER_ID'], $name, $email, $phone, $address)) {
+            $success = 'Customer updated successfully!';
+            $customer = getCustomerById($customer['CUSTOMER_ID']);
         } else {
             $error = 'Failed to update customer.';
         }
@@ -125,6 +125,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $customer) {
 <?php if ($success): ?>
     <div class="mb-4 p-3 bg-green-100 text-green-800 rounded"><?= htmlspecialchars($success) ?></div>
 <?php endif; ?>
+<?php if ($customer): ?>
+    <div class="mb-4 p-3 rounded bg-blue-100 text-blue-800">
+        <strong>Editing:</strong> <?php echo htmlspecialchars($customer['NAME']); ?> (ID: <?php echo $customer['CUSTOMER_ID']; ?>)
+    </div>
+<?php endif; ?>
+<?php if ($customer): ?>
 <form action="#" class="space-y-6" method="POST">
 <!-- Personal Information Card -->
 <div class="bg-white shadow-sm rounded-lg border border-slate-200 overflow-hidden">
@@ -134,23 +140,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $customer) {
                         Personal Information
                     </h3>
 <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
-<!-- First Name -->
-<div>
-<label class="block text-sm font-medium text-slate-700 mb-1" for="firstname">First Name</label>
-<input class="w-full px-3 py-2 border border-slate-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary" id="name" name="name" placeholder="Enter name" type="text" value="<?= htmlspecialchars($customer['name'] ?? '') ?>"/>
-</div>
-<!-- Last Name -->
-<div>
-<label class="block text-sm font-medium text-slate-700 mb-1" for="lastname">Last Name</label>
-<!-- Email -->
+<!-- Full Name -->
 <div class="sm:col-span-2">
-    <label class="block text-sm font-medium text-slate-700 mb-1" for="email">Email Address</label>
-    <input class="w-full px-3 py-2 border border-slate-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary" id="email" name="email" placeholder="Enter email" type="email" value="<?= htmlspecialchars($customer['email'] ?? '') ?>"/>
+<label class="block text-sm font-medium text-slate-700 mb-1" for="name">Full Name <span class="text-red-500">*</span></label>
+<input class="w-full px-3 py-2 border border-slate-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary" id="name" name="name" placeholder="Enter full name" type="text" value="<?= htmlspecialchars($customer['NAME'] ?? '') ?>" required/>
+</div>
+<!-- Email -->
+<div>
+    <label class="block text-sm font-medium text-slate-700 mb-1" for="email">Email Address <span class="text-red-500">*</span></label>
+    <input class="w-full px-3 py-2 border border-slate-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary" id="email" name="email" placeholder="Enter email" type="email" value="<?= htmlspecialchars($customer['EMAIL'] ?? '') ?>" required/>
 </div>
 <!-- Phone -->
 <div>
     <label class="block text-sm font-medium text-slate-700 mb-1" for="phone">Phone Number</label>
-    <input class="w-full px-3 py-2 border border-slate-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary" id="phone" name="phone" placeholder="Enter phone" type="tel" value="<?= htmlspecialchars($customer['phone'] ?? '') ?>"/>
+    <input class="w-full px-3 py-2 border border-slate-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary" id="phone" name="phone" placeholder="Enter phone" type="tel" value="<?= htmlspecialchars($customer['PHONE'] ?? '') ?>"/>
+</div>
+</div>
+</div>
 </div>
 <!-- Address Information Card -->
 <div class="bg-white shadow-sm rounded-lg border border-slate-200 overflow-hidden">
@@ -159,38 +165,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $customer) {
 <span class="material-icons">location_on</span>
                         Address Information
                     </h3>
-<div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
-<!-- Street Address -->
-<div class="sm:col-span-2">
-<label class="block text-sm font-medium text-slate-700 mb-1" for="street">Street Address</label>
-<input class="w-full px-3 py-2 border border-slate-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary" id="address" name="address" placeholder="Enter address" type="text" value="<?= htmlspecialchars($customer['address'] ?? '') ?>"/>
-</div>
-<!-- City -->
+<div class="space-y-6">
+<!-- Address -->
 <div>
-<label class="block text-sm font-medium text-slate-700 mb-1" for="city">City</label>
-<input class="w-full px-3 py-2 border border-slate-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary" id="city" name="city" placeholder="Enter city" type="text" value="New York"/>
-</div>
-<!-- State/Province -->
-<div>
-<label class="block text-sm font-medium text-slate-700 mb-1" for="state">State/Province</label>
-<input class="w-full px-3 py-2 border border-slate-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary" id="state" name="state" placeholder="Enter state" type="text" value="NY"/>
-</div>
-<!-- Postal Code -->
-<div>
-<label class="block text-sm font-medium text-slate-700 mb-1" for="postal">Postal Code</label>
-<input class="w-full px-3 py-2 border border-slate-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary" id="postal" name="postal" placeholder="Enter postal code" type="text" value="10001"/>
-</div>
-<!-- Country -->
-<div>
-<label class="block text-sm font-medium text-slate-700 mb-1" for="country">Country</label>
-<input class="w-full px-3 py-2 border border-slate-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary" id="country" name="country" placeholder="Enter country" type="text" value="United States"/>
+<label class="block text-sm font-medium text-slate-700 mb-1" for="address">Address</label>
+<textarea class="w-full px-3 py-2 border border-slate-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary" id="address" name="address" placeholder="Enter full address" rows="3"><?= htmlspecialchars($customer['ADDRESS'] ?? '') ?></textarea>
 </div>
 </div>
 </div>
 </div>
 <!-- Buttons -->
 <div class="flex items-center justify-between pt-6">
-<button class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-slate-600 hover:bg-slate-700 focus:outline-none transition-all" type="button">
+<button class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-slate-600 hover:bg-slate-700 focus:outline-none transition-all" type="button" onclick="window.history.back()">
 <span class="material-icons text-lg mr-2">arrow_back</span>
                     Back
                 </button>
@@ -206,6 +192,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $customer) {
 </div>
 </div>
 </form>
+<?php else: ?>
+<div class="bg-white shadow-sm rounded-lg border border-slate-200 p-8 text-center">
+    <span class="material-icons text-4xl text-slate-400 mb-4">person_off</span>
+    <h3 class="text-lg font-medium text-slate-900 mb-2">Customer Not Found</h3>
+    <p class="text-slate-500 mb-4">The customer you're trying to edit could not be found.</p>
+    <a href="index.php?page=customer" class="inline-flex items-center px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover transition">
+        <span class="material-icons text-sm mr-2">arrow_back</span>
+        Back to Customers
+    </a>
+</div>
+<?php endif; ?>
 </div>
 </main>
 </body>

@@ -1,3 +1,43 @@
+<?php
+require_once __DIR__ . '/../controllers/OrderController.php';
+require_once __DIR__ . '/../controllers/CustomerController.php';
+$loading = false;
+$error = '';
+$success = '';
+$order = null;
+$orderItems = [];
+$customers = getAllCustomers();
+
+if (!isset($_GET['id'])) {
+    $error = 'No order selected.';
+} else {
+    $order = getOrderById(intval($_GET['id']));
+    if (!$order) {
+        $error = 'Order not found.';
+    } else {
+        $orderItems = getOrderItems($order['ORDER_ID']);
+    }
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $order) {
+    $loading = true;
+    $customer_id = intval($_POST['customer_id'] ?? $order['CUSTOMER_ID']);
+    $total_amount = floatval($_POST['total_amount'] ?? $order['TOTAL_AMOUNT']);
+    $status = trim($_POST['status'] ?? $order['STATUS']);
+    
+    if ($customer_id && $total_amount && $status) {
+        if (updateOrder($order['ORDER_ID'], $customer_id, $total_amount, $status)) {
+            $success = 'Order updated successfully!';
+            $order = getOrderById($order['ORDER_ID']);
+        } else {
+            $error = 'Failed to update order.';
+        }
+    } else {
+        $error = 'All fields are required.';
+    }
+    $loading = false;
+}
+?>
 <!DOCTYPE html>
 <html lang="en"><head>
 <meta charset="utf-8"/>
@@ -6,7 +46,6 @@
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
 <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
@@ -15,7 +54,6 @@
                     colors: {
                         "primary": "#135bec",
                         "primary-hover": "#104bc7",
-                        "primary-light": "rgba(19, 91, 236, 0.1)",
                         "background-light": "#f6f6f8",
                         "background-dark": "#101622",
                     },
@@ -27,13 +65,6 @@
             },
         }
     </script>
-<style type="text/tailwindcss">
-        @layer base {
-            .material-symbols-outlined {
-                font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-            }
-        }
-    </style>
 </head>
 <body class="bg-background-light text-slate-800 font-display antialiased min-h-screen flex flex-col">
 <nav class="bg-white border-b border-slate-200 sticky top-0 z-30">
@@ -57,11 +88,9 @@
 <button class="relative p-1 rounded-full text-slate-400 hover:text-slate-500 focus:outline-none" type="button">
 <span class="sr-only">View notifications</span>
 <span class="material-icons">notifications</span>
-<span class="absolute top-1 right-1 block h-2 w-2 rounded-full bg-red-500 ring-2 ring-white"></span>
 </button>
 </div>
 <div class="ml-3 relative flex items-center gap-2">
-<img alt="Admin Profile Picture" class="h-8 w-8 rounded-full bg-slate-100" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcqJ8KRwrEve0Cw0AXwwBTYJbFk9BOlQfP-inWjEG2GEDo9Ej0jUAreHPwB6uY7Eh70EQ7m21DHU1nUe9s_sUKfwIQSIVthASJSy41O8J2dKwxb7ibCKRdSugX8fuJdUuj5KKknmahRo55GTFjBCND_2-QWZyV0fnMHVvOKK0sG3YRzR6zhqLzhIa-E9TZog9sklL3CgptvHBe8APMKV24IglNf9HnSYXoJeMnjS9e0KPdh8skExmjlgWCiu7-TUaVKxloC_h5gg"/>
 <span class="text-sm font-medium text-slate-700 hidden md:block">Admin User</span>
 </div>
 </div>
@@ -88,6 +117,15 @@
 </div>
 </div>
 <!-- Form -->
+<?php if ($loading): ?>
+    <div class="mb-4 p-3 bg-blue-100 text-blue-800 rounded">Loading...</div>
+<?php endif; ?>
+<?php if ($error): ?>
+    <div class="mb-4 p-3 bg-red-100 text-red-800 rounded"><?= htmlspecialchars($error) ?></div>
+<?php endif; ?>
+<?php if ($success): ?>
+    <div class="mb-4 p-3 bg-green-100 text-green-800 rounded"><?= htmlspecialchars($success) ?></div>
+<?php endif; ?>
 <form action="#" class="space-y-6" method="POST">
 <!-- Order Information Card -->
 <div class="bg-white shadow-sm rounded-lg border border-slate-200 overflow-hidden">
@@ -97,119 +135,87 @@
                         Order Information
                     </h3>
 <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
-<!-- Order Number -->
+<!-- Order ID -->
 <div>
-<label class="block text-sm font-medium text-slate-700 mb-1" for="ordernumber">Order Number</label>
-<input class="w-full px-3 py-2 border border-slate-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary" disabled id="ordernumber" name="ordernumber" type="text" value="ORD-2024-001234"/>
+<label class="block text-sm font-medium text-slate-700 mb-1" for="order_id">Order ID</label>
+<input class="w-full px-3 py-2 border border-slate-300 rounded-lg shadow-sm bg-gray-50" disabled id="order_id" name="order_id" type="text" value="ORDER-<?= str_pad($order['ORDER_ID'] ?? '', 5, '0', STR_PAD_LEFT) ?>"/>
 </div>
 <!-- Order Date -->
 <div>
-<label class="block text-sm font-medium text-slate-700 mb-1" for="orderdate">Order Date</label>
-<input class="w-full px-3 py-2 border border-slate-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary" disabled id="orderdate" name="orderdate" type="date" value="2024-02-15"/>
+<label class="block text-sm font-medium text-slate-700 mb-1" for="order_date">Order Date</label>
+<input class="w-full px-3 py-2 border border-slate-300 rounded-lg shadow-sm bg-gray-50" disabled id="order_date" name="order_date" type="text" value="<?= htmlspecialchars($order['ORDER_DATE'] ?? '') ?>"/>
 </div>
-<!-- Customer Name -->
+<!-- Customer -->
 <div class="sm:col-span-2">
-<label class="block text-sm font-medium text-slate-700 mb-1" for="customer">Customer Name</label>
-<input class="w-full px-3 py-2 border border-slate-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary" id="customer" name="customer" placeholder="Enter customer name" type="text" value="John Smith"/>
+<label class="block text-sm font-medium text-slate-700 mb-1" for="customer_id">Customer</label>
+<select class="w-full px-3 py-2 border border-slate-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary" id="customer_id" name="customer_id" required>
+    <option value="">Select Customer</option>
+    <?php foreach ($customers as $customer): ?>
+        <option value="<?= $customer['CUSTOMER_ID'] ?>" <?= ($order && $order['CUSTOMER_ID'] == $customer['CUSTOMER_ID']) ? 'selected' : '' ?>><?= htmlspecialchars($customer['NAME']) ?> (<?= htmlspecialchars($customer['EMAIL']) ?>)</option>
+    <?php endforeach; ?>
+</select>
+</div>
+<!-- Total Amount -->
+<div>
+<label class="block text-sm font-medium text-slate-700 mb-1" for="total_amount">Total Amount</label>
+<input class="w-full px-3 py-2 border border-slate-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary" id="total_amount" name="total_amount" type="number" step="0.01" min="0" value="<?= htmlspecialchars($order['TOTAL_AMOUNT'] ?? '') ?>" required/>
 </div>
 <!-- Status -->
 <div>
 <label class="block text-sm font-medium text-slate-700 mb-1" for="status">Order Status</label>
-<select class="w-full px-3 py-2 border border-slate-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary" id="status" name="status">
-<option>Pending</option>
-<option selected>Processing</option>
-<option>Shipped</option>
-<option>Delivered</option>
-<option>Cancelled</option>
-</select>
-</div>
-<!-- Payment Status -->
-<div>
-<label class="block text-sm font-medium text-slate-700 mb-1" for="payment">Payment Status</label>
-<select class="w-full px-3 py-2 border border-slate-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary" id="payment" name="payment">
-<option>Unpaid</option>
-<option selected>Paid</option>
-<option>Refunded</option>
+<select class="w-full px-3 py-2 border border-slate-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary" id="status" name="status" required>
+<option value="Pending" <?= ($order && $order['STATUS'] == 'Pending') ? 'selected' : '' ?>>Pending</option>
+<option value="Processing" <?= ($order && $order['STATUS'] == 'Processing') ? 'selected' : '' ?>>Processing</option>
+<option value="Shipped" <?= ($order && $order['STATUS'] == 'Shipped') ? 'selected' : '' ?>>Shipped</option>
+<option value="Delivered" <?= ($order && $order['STATUS'] == 'Delivered') ? 'selected' : '' ?>>Delivered</option>
+<option value="Cancelled" <?= ($order && $order['STATUS'] == 'Cancelled') ? 'selected' : '' ?>>Cancelled</option>
 </select>
 </div>
 </div>
 </div>
 </div>
-<!-- Order Items Card -->
+
+<!-- Order Items Section -->
+<?php if (!empty($orderItems)): ?>
 <div class="bg-white shadow-sm rounded-lg border border-slate-200 overflow-hidden">
-<div class="px-4 py-5 sm:p-6">
-<h3 class="text-lg leading-6 font-medium text-slate-900 flex items-center gap-2 mb-6">
-<span class="material-icons">inventory_2</span>
-                        Order Items
-                    </h3>
-<div class="space-y-4">
-<!-- Item 1 -->
-<div class="border border-slate-200 rounded-lg p-4 space-y-3">
-<div class="grid grid-cols-1 gap-y-3 gap-x-4 sm:grid-cols-3">
-<div>
-<label class="block text-sm font-medium text-slate-700 mb-1" for="item1">Book Title</label>
-<input class="w-full px-3 py-2 border border-slate-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary" id="item1" name="item1" placeholder="Enter book title" type="text" value="1984"/>
+    <div class="px-4 py-5 sm:p-6">
+        <h3 class="text-lg leading-6 font-medium text-slate-900 flex items-center gap-2 mb-6">
+            <span class="material-icons">shopping_cart</span>
+            Order Items
+        </h3>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-50">
+                        <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500 border-b border-slate-200">Book</th>
+                        <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500 border-b border-slate-200">Author</th>
+                        <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500 border-b border-slate-200">ISBN</th>
+                        <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500 border-b border-slate-200">Quantity</th>
+                        <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500 border-b border-slate-200">Price</th>
+                        <th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500 border-b border-slate-200">Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($orderItems as $item): ?>
+                        <tr class="hover:bg-slate-50">
+                            <td class="px-4 py-3 font-medium text-slate-900"><?= htmlspecialchars($item['TITLE']) ?></td>
+                            <td class="px-4 py-3 text-slate-600"><?= htmlspecialchars($item['AUTHOR_NAME'] ?? 'Unknown') ?></td>
+                            <td class="px-4 py-3 text-slate-600 font-mono text-sm"><?= htmlspecialchars($item['ISBN'] ?? 'N/A') ?></td>
+                            <td class="px-4 py-3 text-slate-600"><?= $item['QUANTITY'] ?></td>
+                            <td class="px-4 py-3 text-slate-600">$<?= number_format($item['PRICE'], 2) ?></td>
+                            <td class="px-4 py-3 font-semibold text-slate-900">$<?= number_format($item['QUANTITY'] * $item['PRICE'], 2) ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
-<div>
-<label class="block text-sm font-medium text-slate-700 mb-1" for="qty1">Quantity</label>
-<input class="w-full px-3 py-2 border border-slate-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary" id="qty1" min="1" name="qty1" type="number" value="2"/>
-</div>
-<div>
-<label class="block text-sm font-medium text-slate-700 mb-1" for="price1">Price</label>
-<input class="w-full px-3 py-2 border border-slate-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary" id="price1" name="price1" type="number" value="15.99"/>
-</div>
-</div>
-</div>
-<!-- Item 2 -->
-<div class="border border-slate-200 rounded-lg p-4 space-y-3">
-<div class="grid grid-cols-1 gap-y-3 gap-x-4 sm:grid-cols-3">
-<div>
-<label class="block text-sm font-medium text-slate-700 mb-1" for="item2">Book Title</label>
-<input class="w-full px-3 py-2 border border-slate-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary" id="item2" name="item2" placeholder="Enter book title" type="text" value="Animal Farm"/>
-</div>
-<div>
-<label class="block text-sm font-medium text-slate-700 mb-1" for="qty2">Quantity</label>
-<input class="w-full px-3 py-2 border border-slate-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary" id="qty2" min="1" name="qty2" type="number" value="1"/>
-</div>
-<div>
-<label class="block text-sm font-medium text-slate-700 mb-1" for="price2">Price</label>
-<input class="w-full px-3 py-2 border border-slate-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary" id="price2" name="price2" type="number" value="12.99"/>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<!-- Totals Card -->
-<div class="bg-white shadow-sm rounded-lg border border-slate-200 overflow-hidden">
-<div class="px-4 py-5 sm:p-6">
-<h3 class="text-lg leading-6 font-medium text-slate-900 flex items-center gap-2 mb-6">
-<span class="material-icons">receipt_long</span>
-                        Order Totals
-                    </h3>
-<div class="space-y-3">
-<div class="flex justify-between text-sm">
-<span class="text-slate-600">Subtotal:</span>
-<span class="text-slate-900 font-medium">$44.97</span>
-</div>
-<div class="flex justify-between text-sm">
-<span class="text-slate-600">Shipping:</span>
-<input class="w-20 px-2 py-1 border border-slate-300 rounded text-right" name="shipping" type="number" value="5.00"/>
-</div>
-<div class="flex justify-between text-sm">
-<span class="text-slate-600">Tax:</span>
-<input class="w-20 px-2 py-1 border border-slate-300 rounded text-right" name="tax" type="number" value="4.00"/>
-</div>
-<div class="border-t border-slate-200 pt-3 flex justify-between text-lg font-bold">
-<span>Total:</span>
-<span class="text-primary">$53.97</span>
-</div>
-</div>
-</div>
-</div>
+<?php endif; ?>
+
 <!-- Buttons -->
 <div class="flex items-center justify-between pt-6">
-<button class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-slate-600 hover:bg-slate-700 focus:outline-none transition-all" type="button">
+<button class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-slate-600 hover:bg-slate-700 focus:outline-none transition-all" type="button" onclick="window.history.back()">
 <span class="material-icons text-lg mr-2">arrow_back</span>
                     Back
                 </button>

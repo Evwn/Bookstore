@@ -17,6 +17,14 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
 // Map page to view file
 $views = [
     'dashboard' => 'views/Dashbord.php',
+    'system_entry' => 'views/SystemEntry.php',
+    'enter_authors' => 'views/EnterAuthors.php',
+    'enter_books' => 'views/EnterBooks.php',
+    'search_books' => 'views/SearchBooks.php',
+    'update_quantity' => 'views/UpdateQuantity.php',
+    'book_details' => 'views/AssignmentBookDetails.php',
+    'author_details' => 'views/AssignmentAuthorDetails.php',
+    // Legacy routes for compatibility
     'inventrory' => 'views/Inventrory.php',
     'author' => 'views/Author.php',
     'authordetails' => 'views/AuthorDetails.php',
@@ -24,15 +32,18 @@ $views = [
     'addnewbook' => 'views/AddNewBook.php',
     'bookdetails' => 'views/BookDetails.php',
     'customer' => 'views/Customer.php',
+    'addcustomer' => 'views/AddCustomer.php',
     'order' => 'views/Order.php',
+    'orderdetails' => 'views/OrderDetails.php',
+    'addorder' => 'views/AddOrder.php',
     'editbook' => 'views/EditBook.php',
     'editauthor' => 'views/EditAuthor.php',
     'editcustomer' => 'views/EditCustomer.php',
     'editorder' => 'views/EditOrder.php',
 ];
 
-// Check if page exists, default to dashboard
-$viewFile = isset($views[$page]) ? $views[$page] : $views['dashboard'];
+// Check if page exists, default to system entry
+$viewFile = isset($views[$page]) ? $views[$page] : $views['system_entry'];
 
 // Start with HTML structure and navigation
 ?>

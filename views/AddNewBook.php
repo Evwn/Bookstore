@@ -7,40 +7,35 @@ $success = '';
 $authors = getAllAuthors();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
+    $loading = true;
     $title = trim($_POST['title'] ?? '');
     $author_id = intval($_POST['author_id'] ?? 0);
     $isbn = trim($_POST['isbn'] ?? '');
     $genre = trim($_POST['genre'] ?? '');
-    $published_year = $_POST['published_year'] ?? null;
+    $published_year = $_POST['published_year'] ? intval($_POST['published_year']) : null;
     $price = floatval($_POST['price'] ?? 0);
     $stock = intval($_POST['stock'] ?? 0);
     $edition = trim($_POST['edition'] ?? '');
     $cover_url = trim($_POST['cover_url'] ?? '');
     $description = trim($_POST['description'] ?? '');
 
-    if (!$title || !$author_id || !$price) {
-        $error = 'Title, author and price required';
+    if (!$title) {
+        $error = 'Title is required.';
+    } elseif (!$author_id) {
+        $error = 'Please select an author.';
+    } elseif ($price < 0) {
+        $error = 'Price cannot be negative.';
+    } elseif ($stock < 0) {
+        $error = 'Stock cannot be negative.';
     } else {
-
-        if (addBook(
-            $title,
-            $author_id,
-            $isbn,
-            $genre,
-            $published_year,
-            $price,
-            $stock,
-            $edition,
-            $cover_url,
-            $description
-        )) {
-            $success = "Book saved successfully";
-            $_POST = []; // clears form
+        if (addBook($title, $author_id, $isbn, $genre, $published_year, $price, $stock, $edition, $cover_url, $description)) {
+            $success = "Book added successfully!";
+            $_POST = []; // Clear form
         } else {
-            $error = "Database insert failed";
+            $error = "Failed to add book. Please try again.";
         }
     }
+    $loading = false;
 }
 
 ?>

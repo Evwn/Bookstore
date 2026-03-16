@@ -18,9 +18,9 @@ if (isset($_GET['id'])) {
 }
 
 // Handle delete action
-if (isset($_POST['delete_book']) && isset($book['book_id'])) {
+if (isset($_POST['delete_book']) && isset($book['BOOK_ID'])) {
     $loading = true;
-    if (deleteBook($book['book_id'])) {
+    if (deleteBook($book['BOOK_ID'])) {
         $success = 'Book deleted successfully.';
         // Redirect to inventory after 1.5s
         echo '<script>setTimeout(function(){ window.location.href = "index.php?page=inventrory"; }, 1500);</script>';
@@ -63,40 +63,6 @@ if (isset($_POST['delete_book']) && isset($book['book_id'])) {
 <body class="bg-background-light dark:bg-background-dark font-display text-slate-800 dark:text-slate-100 antialiased min-h-screen">
 <!-- Dashboard Layout Wrapper -->
 <div class="flex h-screen overflow-hidden">
-<!-- Sidebar Navigation (Simplified for Context) -->
-<aside class="hidden md:flex flex-col w-64 bg-white dark:bg-[#1a202c] border-r border-slate-200 dark:border-slate-800 h-full">
-<div class="p-6 flex items-center space-x-3">
-<div class="h-8 w-8 bg-primary rounded-lg flex items-center justify-center text-white font-bold text-xl">B</div>
-<span class="text-lg font-bold tracking-tight text-slate-900 dark:text-white">BookStore</span>
-</div>
-<nav class="flex-1 px-4 space-y-2 mt-4">
-<a class="flex items-center px-4 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors group" href="index.php?page=dashboard">
-<span class="material-icons text-xl mr-3 group-hover:text-primary transition-colors">dashboard</span>
-                    Dashboard
-                </a>
-<a class="flex items-center px-4 py-3 bg-primary/10 text-primary dark:text-primary-400 rounded-lg transition-colors font-medium" href="index.php?page=bookdetails">
-<span class="material-icons text-xl mr-3">library_books</span>
-                    Books Inventory
-                </a>
-<a class="flex items-center px-4 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors group" href="index.php?page=authordetails">
-<span class="material-icons text-xl mr-3 group-hover:text-primary transition-colors">people</span>
-                    Authors
-                </a>
-<a class="flex items-center px-4 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors group" href="index.php?page=order">
-<span class="material-icons text-xl mr-3 group-hover:text-primary transition-colors">shopping_cart</span>
-                    Orders
-                </a>
-</nav>
-<div class="p-4 border-t border-slate-200 dark:border-slate-800">
-<div class="flex items-center space-x-3">
-<div class="h-10 w-10 rounded-full bg-slate-200 dark:bg-slate-700 bg-cover bg-center" data-alt="Admin User Profile Picture" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAqZ_toHgo6SF_AyaNIQgwAhDX1CgeX0VUQlevqvBQOJWF7OJ2usxkTuLW-_n6mSn1MfSOnPiR0oKqI3yWijnFANHn_gbTfiQ-h3jE93CEFN7jfkhSwtalr1gjXd3tnMUm-xr8YnBjAFg6rv41FwmbXk54-rIShWjv-WgKQC7afU2Cj3-pA2dW1pZXL710riUsA9PMEBWtcd-LHOx7cL_gZbKHdmyPXAw3ZhKsGWs57yr-bw1xixKJ5BrT077ymYCKgjccW32y4dg')"></div>
-<div>
-<p class="text-sm font-medium text-slate-900 dark:text-white">Admin User</p>
-<p class="text-xs text-slate-500 dark:text-slate-400">View Profile</p>
-</div>
-</div>
-</div>
-</aside>
 <!-- Main Content Area -->
 <main class="flex-1 overflow-y-auto">
 <!-- Top Header -->
@@ -137,13 +103,13 @@ if (isset($_POST['delete_book']) && isset($book['book_id'])) {
 <h1 class="text-3xl font-bold text-slate-900 dark:text-white tracking-tight mb-1">Book Details</h1>
 <p class="text-slate-500 dark:text-slate-400">
     <?php if ($book): ?>
-        View and manage metadata for ISBN: <span class="font-mono"> <?= htmlspecialchars($book['isbn'] ?? '') ?> </span>
+        View and manage metadata for ISBN: <span class="font-mono"> <?= htmlspecialchars($book['ISBN'] ?? '') ?> </span>
     <?php endif; ?>
 </p>
 </div>
 <div class="flex items-center space-x-3">
     <?php if ($book): ?>
-    <button class="px-4 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 font-medium transition-colors flex items-center" onclick="window.location.href='index.php?page=editbook&id=<?= $book['book_id'] ?>'">
+    <button class="px-4 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 font-medium transition-colors flex items-center" onclick="window.location.href='index.php?page=editbook&id=<?= $book['BOOK_ID'] ?>'">>
         <span class="material-icons text-sm mr-2">edit</span>
         Edit
     </button>
@@ -166,7 +132,7 @@ if (isset($_POST['delete_book']) && isset($book['book_id'])) {
 <!-- Book Cover Card -->
 <div class="bg-white dark:bg-[#1a202c] rounded-xl border border-slate-200 dark:border-slate-800 p-2 shadow-sm">
 <div class="relative aspect-[2/3] w-full bg-slate-100 dark:bg-slate-800 rounded-lg overflow-hidden group">
-<img alt="Book cover" class="w-full h-full object-cover" src="<?= htmlspecialchars($book['cover_url'] ?? 'https://via.placeholder.com/200x300?text=No+Cover') ?>"/>
+<img alt="Book cover" class="w-full h-full object-cover" src="<?= htmlspecialchars($book['COVER_URL'] ?? 'https://via.placeholder.com/200x300?text=No+Cover') ?>"/>
 <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
 <button class="bg-white text-slate-900 px-4 py-2 rounded-lg font-medium text-sm shadow-lg hover:bg-slate-50">Change Cover</button>
 </div>
@@ -174,10 +140,10 @@ if (isset($_POST['delete_book']) && isset($book['book_id'])) {
 <div class="p-4 text-center">
     <?php if ($book): ?>
         <div class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 mb-2">
-            <?= ($book['stock'] ?? 0) > 0 ? 'In Stock' : 'Out of Stock' ?>
+            <?= ($book['STOCK'] ?? 0) > 0 ? 'In Stock' : 'Out of Stock' ?>
         </div>
-        <h3 class="font-semibold text-slate-900 dark:text-white"><?= htmlspecialchars($book['title'] ?? '') ?></h3>
-        <p class="text-sm text-slate-500 dark:text-slate-400">Edition: <?= htmlspecialchars($book['edition'] ?? 'N/A') ?></p>
+        <h3 class="font-semibold text-slate-900 dark:text-white"><?= htmlspecialchars($book['TITLE'] ?? '') ?></h3>
+        <p class="text-sm text-slate-500 dark:text-slate-400">Edition: <?= htmlspecialchars($book['EDITION'] ?? 'N/A') ?></p>
     <?php else: ?>
         <div class="text-slate-500">No book found.</div>
     <?php endif; ?>
@@ -185,30 +151,21 @@ if (isset($_POST['delete_book']) && isset($book['book_id'])) {
 </div>
 <!-- Quick Stats Card -->
 <div class="bg-white dark:bg-[#1a202c] rounded-xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
-<h4 class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-4">Performance</h4>
+<h4 class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-4">Book Information</h4>
 <div class="space-y-5">
-<div>
-<div class="flex justify-between items-end mb-1">
-<span class="text-sm font-medium text-slate-700 dark:text-slate-300">Sales Goal</span>
-<span class="text-sm font-bold text-primary">78%</span>
-</div>
-<div class="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-2">
-<div class="bg-primary h-2 rounded-full" style="width: 78%"></div>
-</div>
-</div>
-<div class="grid grid-cols-2 gap-4 pt-2">
+<div class="grid grid-cols-1 gap-4 pt-2">
 <div class="p-3 bg-background-light dark:bg-slate-800/50 rounded-lg">
-<p class="text-xs text-slate-500 dark:text-slate-400">Rating</p>
+<p class="text-xs text-slate-500 dark:text-slate-400">Genre</p>
 <div class="flex items-center mt-1">
-<span class="material-icons text-yellow-400 text-base mr-1">star</span>
-<span class="font-bold text-slate-900 dark:text-white">4.8</span>
+<span class="material-icons text-blue-400 text-base mr-1">category</span>
+<span class="font-bold text-slate-900 dark:text-white"><?= htmlspecialchars($book['GENRE'] ?? 'N/A') ?></span>
 </div>
 </div>
 <div class="p-3 bg-background-light dark:bg-slate-800/50 rounded-lg">
-<p class="text-xs text-slate-500 dark:text-slate-400">Views</p>
+<p class="text-xs text-slate-500 dark:text-slate-400">Stock</p>
 <div class="flex items-center mt-1">
-<span class="material-icons text-blue-400 text-base mr-1">visibility</span>
-<span class="font-bold text-slate-900 dark:text-white">2.4k</span>
+<span class="material-icons text-green-400 text-base mr-1">inventory</span>
+<span class="font-bold text-slate-900 dark:text-white"><?= htmlspecialchars($book['STOCK'] ?? '0') ?></span>
 </div>
 </div>
 </div>
@@ -226,12 +183,12 @@ if (isset($_POST['delete_book']) && isset($book['book_id'])) {
 <dl class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-8">
 <div class="col-span-2">
 <dt class="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Book Title</dt>
-<dd class="text-xl font-semibold text-slate-900 dark:text-white"><?= htmlspecialchars($book['title'] ?? '') ?></dd>
+<dd class="text-xl font-semibold text-slate-900 dark:text-white"><?= htmlspecialchars($book['TITLE'] ?? '') ?></dd>
 </div>
 <div>
 <dt class="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">ISBN</dt>
 <dd class="flex items-center">
-<span class="font-mono text-base text-slate-900 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700"><?= htmlspecialchars($book['isbn'] ?? '') ?></span>
+<span class="font-mono text-base text-slate-900 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700"><?= htmlspecialchars($book['ISBN'] ?? '') ?></span>
 <button class="ml-2 text-slate-400 hover:text-primary transition-colors" title="Copy ISBN">
 <span class="material-icons text-sm">content_copy</span>
 </button>
@@ -239,17 +196,17 @@ if (isset($_POST['delete_book']) && isset($book['book_id'])) {
 </div>
 <div>
 <dt class="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Publication Date</dt>
-<dd class="text-base text-slate-900 dark:text-white"><?= htmlspecialchars($book['published_year'] ?? '') ?></dd>
+<dd class="text-base text-slate-900 dark:text-white"><?= htmlspecialchars($book['PUBLISHED_YEAR'] ?? '') ?></dd>
 </div>
 <div class="col-span-2 sm:col-span-1">
     <dt class="text-sm font-medium text-slate-500 dark:text-slate-400 mb-2">Authors</dt>
     <dd class="flex flex-wrap gap-2">
-        <?php if (!empty($book['author_name'])): ?>
+        <?php if (!empty($book['AUTHOR_NAME'])): ?>
             <a class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all group" href="#">
                 <div class="w-5 h-5 rounded-full bg-primary/20 mr-2 flex items-center justify-center text-xs font-bold group-hover:bg-white/20">
-                    <?= strtoupper(substr($book['author_name'], 0, 2)) ?>
+                    <?= strtoupper(substr($book['AUTHOR_NAME'], 0, 2)) ?>
                 </div>
-                <?= htmlspecialchars($book['author_name']) ?>
+                <?= htmlspecialchars($book['AUTHOR_NAME']) ?>
             </a>
         <?php else: ?>
             <span class="text-slate-400">Unknown</span>
@@ -259,7 +216,7 @@ if (isset($_POST['delete_book']) && isset($book['book_id'])) {
 <div class="col-span-2 mt-2">
 <dt class="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Description</dt>
 <dd class="text-base text-slate-700 dark:text-slate-300 leading-relaxed max-w-2xl">
-    <?= nl2br(htmlspecialchars($book['description'] ?? 'No description.')) ?>
+    <?= nl2br(htmlspecialchars($book['DESCRIPTION'] ?? 'No description.')) ?>
 </dd>
 </div>
 </dl>
@@ -278,28 +235,25 @@ if (isset($_POST['delete_book']) && isset($book['book_id'])) {
 <span class="material-icons text-5xl text-primary">attach_money</span>
 </div>
 <dt class="text-sm font-medium text-slate-500 dark:text-slate-400">Unit Price</dt>
-<dd class="mt-2 text-3xl font-bold text-slate-900 dark:text-white tracking-tight">$<?= htmlspecialchars($book['price'] ?? '0.00') ?></dd>
-<div class="mt-1 text-xs text-green-600 dark:text-green-400 font-medium flex items-center">
-<span class="material-icons text-sm mr-0.5">trending_up</span> +2.5% vs last month
-                                        </div>
+<dd class="mt-2 text-3xl font-bold text-slate-900 dark:text-white tracking-tight">$<?= htmlspecialchars($book['PRICE'] ?? '0.00') ?></dd>
 </div>
-<!-- Percentage Box -->
-<div class="relative overflow-hidden rounded-lg border border-slate-200 dark:border-slate-700 p-4 group hover:border-purple-500/50 transition-colors bg-white dark:bg-transparent">
-<div class="absolute right-0 top-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
-<span class="material-icons text-5xl text-purple-500">pie_chart</span>
-</div>
-<dt class="text-sm font-medium text-slate-500 dark:text-slate-400">Publisher Share</dt>
-<dd class="mt-2 text-3xl font-bold text-slate-900 dark:text-white tracking-tight">15%</dd>
-<div class="mt-1 text-xs text-slate-400">Standard rate applies</div>
-</div>
-<!-- Quantity Box -->
+<!-- Stock Box -->
 <div class="relative overflow-hidden rounded-lg border border-slate-200 dark:border-slate-700 p-4 group hover:border-orange-500/50 transition-colors bg-white dark:bg-transparent">
 <div class="absolute right-0 top-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
 <span class="material-icons text-5xl text-orange-500">inventory_2</span>
 </div>
-<dt class="text-sm font-medium text-slate-500 dark:text-slate-400">Quantity Sold</dt>
-<dd class="mt-2 text-3xl font-bold text-slate-900 dark:text-white tracking-tight"><?= htmlspecialchars($book['stock'] ?? '0') ?></dd>
-<div class="mt-1 text-xs text-orange-600 dark:text-orange-400 font-medium">Low stock alert (Regional)</div>
+<dt class="text-sm font-medium text-slate-500 dark:text-slate-400">Stock Quantity</dt>
+<dd class="mt-2 text-3xl font-bold text-slate-900 dark:text-white tracking-tight"><?= htmlspecialchars($book['STOCK'] ?? '0') ?></dd>
+<div class="mt-1 text-xs text-slate-400"><?= ($book['STOCK'] ?? 0) > 10 ? 'In Stock' : 'Low Stock' ?></div>
+</div>
+<!-- Edition Box -->
+<div class="relative overflow-hidden rounded-lg border border-slate-200 dark:border-slate-700 p-4 group hover:border-purple-500/50 transition-colors bg-white dark:bg-transparent">
+<div class="absolute right-0 top-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-icons text-5xl text-purple-500">book</span>
+</div>
+<dt class="text-sm font-medium text-slate-500 dark:text-slate-400">Edition</dt>
+<dd class="mt-2 text-xl font-bold text-slate-900 dark:text-white tracking-tight"><?= htmlspecialchars($book['EDITION'] ?? 'N/A') ?></dd>
+<div class="mt-1 text-xs text-slate-400">Current edition</div>
 </div>
 </div>
 </div>
