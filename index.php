@@ -16,7 +16,7 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
 
 // Map page to view file
 $views = [
-    'dashboard' => 'views/Dashbord.php',
+    'dashboard' => 'views/SystemEntry.php',
     'system_entry' => 'views/SystemEntry.php',
     'enter_authors' => 'views/EnterAuthors.php',
     'enter_books' => 'views/EnterBooks.php',
