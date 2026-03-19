@@ -44,7 +44,9 @@ $views = [
 
 // Check if page exists, default to system entry
 $viewFile = isset($views[$page]) ? $views[$page] : $views['system_entry'];
-
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 // Start with HTML structure and navigation
 ?>
 <!DOCTYPE html>
