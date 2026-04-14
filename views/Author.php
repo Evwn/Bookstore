@@ -106,6 +106,7 @@ $authors = getAllAuthors();
         <tr class="bg-slate-50 dark:bg-slate-800/50">
             <th class="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-slate-500 border-b border-slate-200 dark:border-slate-800">Author ID</th>
             <th class="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-slate-500 border-b border-slate-200 dark:border-slate-800">Author Name</th>
+            <th class="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-slate-500 border-b border-slate-200 dark:border-slate-800">Royalties</th>
             <th class="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-slate-500 border-b border-slate-200 dark:border-slate-800 text-right">Actions</th>
         </tr>
     </thead>
@@ -116,6 +117,8 @@ $authors = getAllAuthors();
                 <td class="px-6 py-4">
                     <a class="text-primary font-medium hover:underline decoration-2 underline-offset-4" href="index.php?page=authordetails&id=<?php echo $author['AUTHOR_ID']; ?>"><?php echo htmlspecialchars($author['NAME']); ?></a>
                 </td>
+                <?php $ar = getAuthorRoyalty($author['AUTHOR_ID']); ?>
+                <td class="px-6 py-4">$<?php echo number_format($ar['total'] ?? 0.0, 2); ?></td>
                 <td class="px-6 py-4 text-right">
                     <a href="index.php?page=editauthor&id=<?php echo $author['AUTHOR_ID']; ?>" class="text-slate-400 hover:text-primary transition-colors">Edit</a>
                 </td>

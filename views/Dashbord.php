@@ -15,6 +15,8 @@ require_once __DIR__ . '/../controllers/OrderController.php';
 $books = getAllBooks();
 $authors = getAllAuthors();
 $orders = getAllOrders();
+// compute top authors by royalties
+$topAuthors = getTopAuthors(5);
 
 ?>
 <div class="flex-1 overflow-y-auto p-6 md:p-8">
@@ -80,6 +82,29 @@ $orders = getAllOrders();
 
             <?php if (count($books) === 0): ?>
                 <div class="text-slate-500 mt-4">No books found in the database.</div>
+            <?php endif; ?>
+        </div>
+
+        <div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6 mt-8">
+            <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-4">Top Authors by Royalties</h3>
+            <?php if (!empty($topAuthors)): ?>
+                <ol class="list-decimal pl-5 text-slate-700 dark:text-slate-300 space-y-2">
+                    <?php foreach ($topAuthors as $entry): $a = $entry['author']; $r = $entry['royalty']; ?>
+                        <li>
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <a href="index.php?page=authordetails&id=<?php echo $a['AUTHOR_ID']; ?>" class="text-primary hover:underline"><?php echo htmlspecialchars($a['NAME']); ?></a>
+                                    <div class="text-xs text-slate-500">ID: <?php echo $a['AUTHOR_ID']; ?></div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-sm font-semibold text-slate-900 dark:text-white">$<?php echo number_format($r, 2); ?></div>
+                                </div>
+                            </div>
+                        </li>
+                    <?php endforeach; ?>
+                </ol>
+            <?php else: ?>
+                <div class="text-slate-500">No royalty data available yet.</div>
             <?php endif; ?>
         </div>
     </div>

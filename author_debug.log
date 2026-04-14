@@ -20,3 +20,6 @@
 2026-03-16T15:03:33+00:00 | AddAuthor.php loaded | METHOD: GET
 2026-03-16T15:03:37+00:00 | AddAuthor.php loaded | METHOD: POST
 2026-03-16 15:03:37 | addAuthor called | name: dfghg | biography: dfgsh
+2026-04-10T12:00:24+00:00 | AddAuthor.php loaded | METHOD: GET
+2026-04-10T12:00:33+00:00 | AddAuthor.php loaded | METHOD: POST
+2026-04-10 12:00:33 | addAuthor called | name: Me | biography: sefdg

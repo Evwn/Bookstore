@@ -4,16 +4,15 @@ require_once __DIR__ . '/../controllers/BookController.php';
 $success = $error = '';
 $author = null;
 $books = [];
+$royalty = ['total' => 0.0, 'per_book' => []];
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 if ($id) {
     $author = getAuthorById($id);
     if ($author) {
-        $allBooks = getAllBooks();
-        foreach ($allBooks as $book) {
-            if ($book['AUTHOR_ID'] == $id) {
-                $books[] = $book;
-            }
-        }
+        // Fetch books where this author contributed (supports many-to-many and legacy single-author)
+        $books = getBooksByAuthor($id);
+        // Compute royalties
+        $royalty = getAuthorRoyalty($id);
     } else {
         $error = 'Author not found.';
     }
@@ -104,6 +103,13 @@ if ($id) {
                             <div><strong>Genre:</strong> <?= htmlspecialchars($book['GENRE'] ?? 'N/A') ?></div>
                             <div><strong>Price:</strong> $<?= htmlspecialchars($book['PRICE'] ?? '0.00') ?></div>
                             <div><strong>Stock:</strong> <?= htmlspecialchars($book['STOCK'] ?? '0') ?></div>
+                            <?php
+                                $bookRoyalty = 0.0;
+                                foreach ($royalty['per_book'] as $pb) {
+                                    if ($pb['book_id'] == $book['BOOK_ID']) { $bookRoyalty = floatval($pb['royalty']); break; }
+                                }
+                            ?>
+                            <div><strong>Royalty:</strong> $<?= number_format($bookRoyalty, 2) ?></div>
                         </div>
                     </div>
                 <?php endforeach; ?>
@@ -171,6 +177,12 @@ if ($id) {
     }
     echo $totalStock;
     ?> Books
+</dd>
+</div>
+<div>
+<dt class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Total Royalties</dt>
+<dd class="mt-1 text-sm text-slate-900 dark:text-white">
+    $<?= number_format($royalty['total'] ?? 0.0, 2) ?>
 </dd>
 </div>
 </dl>

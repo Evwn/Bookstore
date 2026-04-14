@@ -62,7 +62,19 @@ function addBook($title, $author_id, $isbn = null, $genre = null, $published_yea
             INSERT INTO BOOKS (TITLE, AUTHOR_ID, ISBN, GENRE, PUBLISHED_YEAR, PRICE, STOCK, EDITION, COVER_URL, DESCRIPTION) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ');
-        return $stmt->execute([$title, $author_id, $isbn, $genre, $published_year, $price, $stock, $edition, $cover_url, $description]);
+        $ok = $stmt->execute([$title, $author_id, $isbn, $genre, $published_year, $price, $stock, $edition, $cover_url, $description]);
+        if ($ok) {
+            // create BOOK_AUTHORS mapping for compatibility with default percentage 0.10
+            try {
+                $bookId = $pdo->lastInsertId();
+                $stmt2 = $pdo->prepare('INSERT INTO BOOK_AUTHORS (BOOK_ID, AUTHOR_ID, PERCENTAGE) VALUES (?, ?, ?)');
+                $stmt2->execute([$bookId, $author_id, 0.10]);
+            } catch (Exception $e) {
+                // non-fatal, log and continue
+                error_log('BOOK_AUTHORS insert error: ' . $e->getMessage());
+            }
+        }
+        return $ok;
     } catch (Exception $e) {
         error_log("Error adding book: " . $e->getMessage());
         return false;
@@ -96,7 +108,21 @@ function updateBook($id, $title, $author_id, $isbn = null, $genre = null, $publi
             SET TITLE = ?, AUTHOR_ID = ?, ISBN = ?, GENRE = ?, PUBLISHED_YEAR = ?, PRICE = ?, STOCK = ?, EDITION = ?, COVER_URL = ?, DESCRIPTION = ? 
             WHERE BOOK_ID = ?
         ');
-        return $stmt->execute([$title, $author_id, $isbn, $genre, $published_year, $price, $stock, $edition, $cover_url, $description, $id]);
+        $ok = $stmt->execute([$title, $author_id, $isbn, $genre, $published_year, $price, $stock, $edition, $cover_url, $description, $id]);
+        if ($ok) {
+            // ensure BOOK_AUTHORS mapping exists for this book-author; if not, insert with default percentage
+            try {
+                $stmtCheck = $pdo->prepare('SELECT COUNT(*) FROM BOOK_AUTHORS WHERE BOOK_ID = ? AND AUTHOR_ID = ?');
+                $stmtCheck->execute([$id, $author_id]);
+                if ($stmtCheck->fetchColumn() == 0) {
+                    $stmtIns = $pdo->prepare('INSERT INTO BOOK_AUTHORS (BOOK_ID, AUTHOR_ID, PERCENTAGE) VALUES (?, ?, ?)');
+                    $stmtIns->execute([$id, $author_id, 0.10]);
+                }
+            } catch (Exception $e) {
+                error_log('BOOK_AUTHORS update error: ' . $e->getMessage());
+            }
+        }
+        return $ok;
     } catch (Exception $e) {
         error_log("Error updating book: " . $e->getMessage());
         return false;
